@@ -19,6 +19,14 @@ COUNTRY_WORDS = {
     "OM": ["ওমান", "oman"],
     "KW": ["কুয়েত", "কুয়েত", "kuwait"],
     "RU": ["রাশিয়া", "রাশিয়া", "russia"],
+    "BH": ["বাহরাইন", "bahrain"],
+    "JO": ["জর্ডান", "jordan"],
+    "LB": ["লেবানন", "lebanon"],
+    "IQ": ["ইরাক", "iraq"],
+    "LY": ["লিবিয়া", "লিবিয়া", "libya"],
+    "EG": ["মিসর", "মিশর", "egypt"],
+    "MV": ["মালদ্বীপ", "maldives"],
+    "BN": ["ব্রুনাই", "brunei"],
 }
 JOB_WORDS = {
     "factory worker": ["ফ্যাক্টরি", "কারখানা", "factory"],

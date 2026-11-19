@@ -254,6 +254,131 @@ aside.side { position: sticky; top: 20px; display: grid; gap: 16px; }
 .wa-num { font: 500 18px var(--mono); color: var(--gold-soft); letter-spacing: .04em; }
 .pilot { border: 1px dashed rgba(233,217,174,.5); padding: 12px 16px; font-size: 15px; color: #DCE7E1; max-width: 34em; }
 
+/* ---------- Why ---------- */
+.why { padding: 76px 0 12px; }
+.why-grid { display: grid; grid-template-columns: 1.3fr .7fr; gap: 36px; margin-top: 30px; align-items: start; }
+table.ledger { width: 100%; border-collapse: collapse; background: var(--sheet); border: 1px solid var(--line); }
+.ledger th { text-align: left; font: 600 14px/1.3 var(--body); color: var(--muted); padding: 12px 16px; border-bottom: 2px solid var(--green); background: #fff; }
+.ledger th:last-child { color: var(--green); }
+.ledger td { padding: 13px 16px; border-bottom: 1px solid var(--line); vertical-align: top; font-size: 15px; line-height: 1.55; }
+.ledger td:first-child { font-weight: 600; color: var(--green-900); width: 21%; }
+.ledger td.alone { color: var(--muted); }
+.ledger td.with { background: #EAF4EE; }
+.ledger td.with b { color: var(--green); }
+.ledger code { font: 500 12px var(--mono); color: var(--green-600); }
+.gap { margin: 0; background: var(--green-900); color: #E3EEE8; padding: 24px 24px 20px; position: relative; overflow: hidden; }
+.gap::before { content: ''; position: absolute; inset: 0; background: var(--guilloche); filter: invert(1); opacity: .18; }
+.gap > * { position: relative; }
+.gap h3 { font: 400 23px/1.3 var(--display); color: #fff; margin: 0 0 4px; }
+.gap > p { margin: 0 0 10px; font-size: 14.5px; color: #BFD6CB; }
+.gap .cty { margin-top: 16px; }
+.gap .cty-head { display: flex; justify-content: space-between; align-items: baseline; font-weight: 600; }
+.gap .times { font: 400 22px/1 var(--display); color: #FF9EA2; }
+.bar { height: 12px; margin-top: 6px; display: flex; align-items: center; }
+.bar i { display: block; height: 100%; }
+.bar.fixed i { background: var(--gold); }
+.bar.paid i { background: repeating-linear-gradient(135deg, #E8676C 0 5px, #C0262D 5px 10px); }
+.bar span { font: 500 12px var(--mono); color: #DCE7E1; margin-left: 8px; white-space: nowrap; }
+.gap .key { display: flex; gap: 16px; margin-top: 18px; font-size: 13px; color: #BFD6CB; }
+.gap .key i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; }
+.gap .src { font-size: 12px; color: #93B3A6; margin: 14px 0 0; }
+.gap .src a { color: #CFE1D8; }
+
+/* ---------- Rights ---------- */
+.rights { padding: 80px 0; background: #F2F6F3; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.statutes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 32px; border-top: 2px solid var(--green); margin-top: 30px; }
+.statute { padding: 22px 0; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 70px 1fr; gap: 14px; align-items: start; }
+.seal { width: 64px; height: 64px; border-radius: 50%; background: #fff; display: grid; place-items: center; text-align: center; color: var(--green-900); font: 400 12px/1.1 var(--display); box-shadow: 0 0 0 2px var(--gold), inset 0 0 0 4px #fff, inset 0 0 0 5px var(--gold-soft); }
+.seal b { display: block; font: 400 23px/1 var(--display); }
+.statute h3 { font: 400 20px/1.3 var(--display); margin: 0 0 6px; color: var(--green-900); }
+.statute p { margin: 0; font-size: 15px; }
+.statute .uses { margin: 8px 0 0; font-size: 13.5px; color: var(--green-600); font-weight: 600; }
+.review { display: flex; gap: 14px; align-items: flex-start; border: 1.5px dashed var(--violet); background: #F6F3FA; padding: 14px 18px; margin-top: 28px; font-size: 15px; }
+.review b { color: var(--violet); }
+.review .en { margin-top: 2px; }
+details.sources { margin-top: 14px; font-size: 14px; }
+details.sources summary { cursor: pointer; color: var(--green-600); font-weight: 600; }
+details.sources ul { margin: 8px 0 0; padding-left: 20px; }
+
+/* Fee calculator */
+.calc { display: grid; grid-template-columns: .85fr 1.15fr; gap: 36px; margin-top: 44px; background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--gold); padding: 28px; }
+.calc h3 { font: 400 26px/1.25 var(--display); color: var(--green-900); margin: 0 0 6px; }
+.calc-intro > p { margin: 0 0 16px; color: var(--muted); font-size: 15px; }
+.calc label { display: block; font-weight: 600; margin: 14px 0 6px; }
+.calc select, .calc input { width: 100%; font: 18px var(--body); color: var(--ink); padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 4px; background: #fff; }
+.calc select:focus, .calc input:focus { outline: none; border-color: var(--green-600); box-shadow: 0 0 0 3px rgba(27,107,83,.18); }
+.quick { margin-top: 8px; }
+.quick button { font: 500 14px/1 var(--body); border: 1px dashed var(--green-600); background: transparent; color: var(--green-600); padding: 7px 11px; border-radius: 99px; margin: 4px 6px 0 0; cursor: pointer; }
+.quick button:hover { background: #E3EEE8; border-style: solid; }
+.meter-wrap { padding-top: 30px; }
+.meter { position: relative; height: 36px; background: #EEF2EF; border: 1px solid var(--line); }
+.meter .fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--green-600); transition: width .45s ease; }
+.meter .fill.over { background: repeating-linear-gradient(135deg, #E8676C 0 8px, #C0262D 8px 16px); }
+.meter .cap { position: absolute; top: -10px; bottom: -10px; width: 3px; background: var(--ink); transition: left .45s ease; }
+.meter .cap span { position: absolute; bottom: calc(100% + 2px); left: 50%; transform: translateX(-50%); font-size: 12.5px; font-weight: 700; white-space: nowrap; }
+.calc-out { font: 400 25px/1.35 var(--display); margin: 22px 0 6px; }
+.calc-out.over { color: var(--red); }
+.calc-out.ok { color: var(--green-600); }
+.calc-note { font-size: 14.5px; color: var(--muted); margin: 0; }
+.calc-special { margin-top: 10px; font-size: 14.5px; background: #FFF8E6; border-left: 3px solid var(--gold); padding: 8px 12px; }
+
+/* ---------- Way out ---------- */
+.wayout { background: var(--green); color: #fff; padding: 80px 0; position: relative; overflow: hidden; }
+.wayout::before { content: ''; position: absolute; inset: 0; background: var(--guilloche); filter: invert(1); opacity: .22; }
+.wayout .wrap { position: relative; }
+.wayout-head { display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: center; }
+.exit { width: 86px; height: 86px; background: #fff; border-radius: 6px; display: grid; place-items: center; box-shadow: 0 0 0 4px var(--gold); }
+.exit svg { width: 60px; height: 60px; }
+.wayout h2 { font: 400 clamp(30px, 3.6vw, 42px)/1.2 var(--display); margin: 0; color: #fff; }
+.wayout-head p { margin: 6px 0 0; color: #CFE1D8; max-width: 40em; }
+.emergency { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin-top: 28px; background: #fff; color: var(--ink); padding: 12px 18px; border-left: 6px solid var(--red); }
+.emergency b { color: var(--red); }
+.emergency .call { background: var(--red); color: #fff; margin: 0; padding: 4px 14px; font-size: 18px; }
+.emergency .call:hover { background: #A51F25; }
+.lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 36px; }
+.lane h3 { font: 400 25px/1.3 var(--display); color: var(--gold-soft); margin: 0; }
+.lane > p { margin: 2px 0 0; color: #A9C6B9; font-size: 14.5px; }
+.lane ol { list-style: none; counter-reset: s; padding: 0; margin: 20px 0 0; position: relative; }
+.lane ol::before { content: ''; position: absolute; left: 17px; top: 18px; bottom: 30px; border-left: 2px dashed rgba(233,217,174,.55); }
+.lane li { counter-increment: s; position: relative; padding: 0 0 24px 56px; }
+.lane li::before { content: counter(s, bengali); position: absolute; left: 0; top: 0; width: 36px; height: 36px; border-radius: 50%; background: var(--gold); color: var(--green-900); display: grid; place-items: center; font: 400 18px/1 var(--display); }
+.lane li b { display: block; font-size: 17.5px; line-height: 1.4; }
+.lane li p { margin: 3px 0 0; color: #D3E4DB; font-size: 15px; }
+.call { display: inline-flex; align-items: baseline; gap: 8px; margin-top: 8px; background: #fff; color: var(--green-900); font-weight: 700; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 16px; }
+.call small { font-weight: 500; color: var(--muted); font-size: 13px; }
+.call:hover { background: var(--gold-soft); }
+.tag { display: inline-block; margin-top: 8px; font-size: 13px; color: var(--gold-soft); border: 1px solid rgba(233,217,174,.45); padding: 2px 9px; border-radius: 99px; }
+.reality { margin-top: 18px; padding: 14px 18px; border: 1px dashed rgba(233,217,174,.5); color: #DCE7E1; font-size: 15px; max-width: 56em; }
+
+/* Law inside a result */
+.law { display: grid; grid-template-columns: 1fr 1fr; margin-top: 12px; border-top: 1px dashed var(--line); }
+.law div { padding-top: 10px; }
+.law div + div { padding-left: 16px; border-left: 1px dashed var(--line); margin-left: 16px; }
+.law small { display: block; font-weight: 700; font-size: 12.5px; color: var(--green-600); margin-bottom: 2px; }
+.law p { margin: 0; font-size: 14.5px; line-height: 1.6; }
+.helpstrip { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; margin: 18px 0 0; padding: 14px 16px; background: var(--green-900); color: #fff; }
+.helpstrip > span { font-weight: 600; margin-right: 4px; }
+.helpstrip a.link { color: var(--gold-soft); font-weight: 600; }
+
+@media (max-width: 960px) {
+  .why-grid, .calc { grid-template-columns: 1fr; }
+  .statutes { grid-template-columns: 1fr 1fr; }
+  .lanes { grid-template-columns: 1fr; gap: 28px; }
+}
+@media (max-width: 680px) {
+  .statutes { grid-template-columns: 1fr; }
+  .ledger thead { display: none; }
+  .ledger tr { display: block; border-bottom: 1px solid var(--line); }
+  .ledger td { display: block; border: 0; width: auto !important; padding: 6px 14px; }
+  .ledger td:first-child { padding-top: 14px; }
+  .ledger td.alone::before { content: 'একা করলে: '; font-weight: 600; }
+  .ledger td.with { margin: 0 14px 14px; }
+  .law { grid-template-columns: 1fr; }
+  .law div + div { padding-left: 0; border-left: 0; margin-left: 0; }
+  .calc { padding: 18px; }
+  .wayout-head { grid-template-columns: 1fr; }
+}
+
 /* ---------- Safety + footer ---------- */
 .safety { padding: 72px 0; }
 .safety-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 48px; margin-top: 26px; }
@@ -317,9 +442,10 @@ footer .chain i.on { background: #2E9E6B; }
       </a>
       <nav aria-label="Sections">
         <a href="#check">যাচাই করুন</a>
-        <a href="#journey">কখন কাজে লাগে</a>
+        <a href="#why">কেন প্রতিশ্রুতি</a>
+        <a href="#rights">আপনার অধিকার</a>
+        <a href="#wayout">বের হওয়ার পথ</a>
         <a href="#whatsapp">WhatsApp</a>
-        <a href="#safety">নিরাপত্তা</a>
       </nav>
     </div>
 
@@ -330,7 +456,7 @@ footer .chain i.on { background: #2E9E6B; }
         <p class="lede-en">Protishruti compares a broker's spoken promise with the visa, contract and payslips, and explains every mismatch in plain Bangla.</p>
         <div class="cta">
           <a class="btn btn-gold" href="#check">এখনই যাচাই করুন</a>
-          <a class="btn btn-line" href="#whatsapp">WhatsApp-এ পাঠান</a>
+          <a class="btn btn-line" href="#rights">আপনার অধিকার জানুন</a>
         </div>
       </div>
 
@@ -361,6 +487,44 @@ footer .chain i.on { background: #2E9E6B; }
 </div>
 
 <main>
+  <section class="why" id="why">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>যাচাই যে কেউ করতে পারে।<br>কিসের সাথে মেলাতে হবে, সেটা কেউ বলে দেয় না।</h2>
+        <p>সরকার খরচের সীমা ঠিক করে দেয়, এজেন্সির লাইসেন্সের তালিকা রাখে, আর আইন কর্মীর পক্ষে। বেশিরভাগ মানুষ জানেনই না এগুলো আছে। প্রতিশ্রুতি এই সবকিছু একসাথে মিলিয়ে দেখে। <span class="en" style="display:inline">Anyone can check a promise. Knowing what to check it against is the hard part.</span></p>
+      </div>
+      <div class="why-grid">
+        <table class="ledger">
+          <thead><tr><th>যা মেলাতে হয়</th><th>একা করলে</th><th>প্রতিশ্রুতিতে</th></tr></thead>
+          <tbody>
+            <tr><td>খরচের সরকারি সীমা</td><td class="alone">পুরনো সার্কুলার আর পত্রিকা খুঁজতে হয়; অনেকে জানেনই না সীমা আছে</td><td class="with"><b>১৫টি দেশের সীমা</b> রাখা আছে; আপনি যত টাকা দিয়েছেন তার সাথে নিজে থেকেই মেলায় <code>R05</code></td></tr>
+            <tr><td>এজেন্সির লাইসেন্স</td><td class="alone">সরকারি তালিকায় নিজে খুঁজতে হয়</td><td class="with">RL নম্বর তালিকায় মেলায়, বাতিল বা মেয়াদোত্তীর্ণ হলে জানায় <code>R06</code></td></tr>
+            <tr><td>আরবি বা ইংরেজি ভিসা</td><td class="alone">অনুবাদক লাগে; প্রায়ই দালালই পড়ে শোনায়</td><td class="with">AI পড়ে, কাগজে আসলে কী লেখা তা বাংলায় দেখায় <code>R01–R04</code></td></tr>
+            <tr><td>কোন আইন ভাঙা হলো</td><td class="alone">আইনজীবীর কাছে যেতে হয়</td><td class="with">প্রতিটি অমিলের পাশে <b>আইন ও ধারা</b>, সহজ বাংলায়</td></tr>
+            <tr><td>প্রমাণ</td><td class="alone">স্ক্রিনশট হারায়, বদলানো যায়</td><td class="with">তারিখসহ রেকর্ড, হ্যাশ-চেইনে বাঁধা; অভিযোগের সময় কাজে লাগে</td></tr>
+            <tr><td>কোথায় যাবেন</td><td class="alone">কেউ বলে দেয় না</td><td class="with">সঠিক হেল্পলাইন, অফিস আর পরের ধাপ</td></tr>
+          </tbody>
+        </table>
+
+        <figure class="gap" aria-labelledby="gapTitle">
+          <h3 id="gapTitle">সরকারি সীমার আড়াই থেকে চার গুণ</h3>
+          <p>সরকার-নির্ধারিত খরচ বনাম কর্মীরা গড়ে যা দিয়েছেন। Government cap vs. what workers paid on average.</p>
+          <div class="cty"><div class="cty-head"><span>সৌদি আরব</span><span class="times">২.৬×</span></div>
+            <div class="bar fixed"><i style="width:37.8%"></i><span>১,৬৫,০০০</span></div>
+            <div class="bar paid"><i style="width:100%"></i><span>৪,৩৬,০০০</span></div></div>
+          <div class="cty"><div class="cty-head"><span>কাতার</span><span class="times">৪.০×</span></div>
+            <div class="bar fixed"><i style="width:23.1%"></i><span>১,০০,৭৮০</span></div>
+            <div class="bar paid"><i style="width:92.2%"></i><span>৪,০২,০০০</span></div></div>
+          <div class="cty"><div class="cty-head"><span>ওমান</span><span class="times">৩.১×</span></div>
+            <div class="bar fixed"><i style="width:23.1%"></i><span>১,০০,৭৮০</span></div>
+            <div class="bar paid"><i style="width:70.6%"></i><span>৩,০৮,০০০</span></div></div>
+          <div class="key"><span><i style="background:var(--gold)"></i>সরকারি সীমা</span><span><i style="background:#C0262D"></i>গড়ে দেওয়া হয়েছে (টাকা)</span></div>
+          <p class="src">গড় খরচ: বাংলাদেশ পরিসংখ্যান ব্যুরোর ২০১৫–১৮ সালের তথ্য, <a href="https://www.thedailystar.net/node/2959876" target="_blank" rel="noopener">The Daily Star, ২০২২</a>। সীমা: <a href="https://www.dhakatribune.com/bangladesh/399203/highest-costs-lowest-returns-bangladeshi" target="_blank" rel="noopener">সরকারি তালিকা, Dhaka Tribune</a>।</p>
+        </figure>
+      </div>
+    </div>
+  </section>
+
   <section class="journey" id="journey">
     <div class="wrap">
       <div class="section-head">
@@ -523,6 +687,104 @@ footer .chain i.on { background: #2E9E6B; }
     </div>
   </section>
 
+
+  <section class="rights" id="rights">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>আইন আপনার পক্ষে</h2>
+        <p>বাংলাদেশের <b>বৈদেশিক কর্মসংস্থান ও অভিবাসী আইন ২০১৩</b> কর্মীকে অধিকার দেয়, আর প্রতারককে শাস্তি। প্রতিশ্রুতি প্রতিটি অমিলকে এই আইনের সাথে জুড়ে দেখায়। <span class="en" style="display:inline">Bangladesh's Overseas Employment and Migrants Act 2013 gives workers rights and punishes fraud. Protishruti links every mismatch to it.</span></p>
+      </div>
+      <div class="statutes">
+        <article class="statute"><div class="seal"><span>ধারা<b>৩১</b></span></div><div>
+          <h3>মিথ্যা প্রতিশ্রুতি অপরাধ</h3>
+          <p>বেতন বা সুবিধার মিথ্যা আশ্বাস দিয়ে টাকা নেওয়া শাস্তিযোগ্য: ৫ বছর পর্যন্ত কারাদণ্ড ও জরিমানা।</p>
+          <p class="uses">প্রতিশ্রুতি মুখের কথা আর কাগজ মেলায় (R01–R04)</p></div></article>
+        <article class="statute"><div class="seal"><span>ধারা<b>২৮</b></span></div><div>
+          <h3>ক্ষতিপূরণ চাওয়ার অধিকার</h3>
+          <p>প্রতারিত কর্মী ও পরিবার ক্ষতিপূরণের জন্য দেওয়ানি মামলা করতে পারেন, আর এই আইনে প্রতারকের বিরুদ্ধে ফৌজদারি মামলাও করা যায়।</p>
+          <p class="uses">রেকর্ডটিই আপনার প্রমাণের শুরু</p></div></article>
+        <article class="statute"><div class="seal"><span>ধারা<b>২২</b></span></div><div>
+          <h3>চুক্তিতে সব জানার অধিকার</h3>
+          <p>চুক্তির মাধ্যমে অভিবাসন প্রক্রিয়া, কাজের পরিবেশ ও আইনি অধিকারের তথ্য পাওয়া আপনার অধিকার।</p>
+          <p class="uses">চুক্তি না থাকলে সতর্ক করে (R07)</p></div></article>
+        <article class="statute"><div class="seal"><span>অধ্যায়<b>৩</b></span></div><div>
+          <h3>শুধু লাইসেন্সধারী এজেন্সি</h3>
+          <p>বিএমইটি-র লাইসেন্স (RL নম্বর) ছাড়া কেউ বিদেশে কর্মী পাঠাতে পারে না। তালিকা সরকারি Overseas Employment Platform-এ আছে।</p>
+          <p class="uses">RL নম্বর মিলিয়ে দেখে (R06)</p></div></article>
+        <article class="statute"><div class="seal"><span>ধারা<b>২৭</b></span></div><div>
+          <h3>আইনি সহায়তার অধিকার</h3>
+          <p>প্রতারণার শিকার কর্মী আইনি সহায়তা পাওয়ার অধিকারী। দেশে বিনা খরচে সরকারি আইনি সহায়তা পাওয়া যায়।</p>
+          <p class="uses">লিগ্যাল এইড ১৬৬৯৯ নম্বর দেখিয়ে দেয়</p></div></article>
+        <article class="statute"><div class="seal"><span>ধারা<b>২৯</b></span></div><div>
+          <h3>দেশে ফেরার অধিকার</h3>
+          <p>দূতাবাসের সাহায্যে দেশে ফেরা যায়। এজেন্সির গাফিলতি বা অবৈধ কাজে ফিরতে হলে খরচ এজেন্সিকে দিতে হয়।</p>
+          <p class="uses">বিদেশে বেতনের অমিল ধরে (R10–R12)</p></div></article>
+      </div>
+
+      <div class="calc" id="fees">
+        <div class="calc-intro">
+          <h3>আপনার কাছে কি বেশি চাওয়া হচ্ছে?</h3>
+          <p>দেশ আর টাকার পরিমাণ দিন, সরকার-নির্ধারিত সর্বোচ্চ খরচের সাথে মিলিয়ে দেখুন। <span class="en">Compare what you're asked to pay with the government cap.</span></p>
+          <label for="feeCountry">কোন দেশে যাচ্ছেন?</label>
+          <select id="feeCountry"></select>
+          <label for="feeAmount">মোট কত টাকা চাওয়া হয়েছে বা দিয়েছেন?</label>
+          <input id="feeAmount" inputmode="numeric" autocomplete="off" placeholder="যেমন ৪০০০০০">
+          <div class="quick" aria-label="দ্রুত পরিমাণ">
+            <button type="button" data-amt="100000">১ লাখ</button><button type="button" data-amt="200000">২ লাখ</button><button type="button" data-amt="300000">৩ লাখ</button><button type="button" data-amt="400000">৪ লাখ</button><button type="button" data-amt="600000">৬ লাখ</button>
+          </div>
+        </div>
+        <div class="meter-wrap" aria-live="polite">
+          <div class="meter"><div class="fill" id="feeFill"></div><div class="cap" id="feeCap"><span id="feeCapLabel"></span></div></div>
+          <p class="calc-out" id="feeOut">টাকার পরিমাণ দিন</p>
+          <p class="calc-note" id="feeNote">সীমার মধ্যে থাকলেও প্রতিটি টাকার রসিদ নিন।</p>
+          <p class="calc-special" id="feeSpecial" hidden></p>
+          <p class="calc-note" id="feeSrc"></p>
+        </div>
+      </div>
+
+      <div class="review">
+        <div><b>আইনি পর্যালোচনা চলছে।</b> এই অংশের আইন, ধারা আর খরচের সীমা সংবাদ, সরকারি ঘোষণা ও গবেষণা প্রতিবেদন থেকে নেওয়া। প্রাথমিক বাছাইয়ের পর একটি আইনি দল প্রতিটি লাইন যাচাই করবে। এটি আইনি তথ্য, আইনি পরামর্শ নয়।
+          <span class="en">Legal review in progress: compiled from news, official announcements and research; a legal team will verify every line after the preliminary round. Legal information, not legal advice.</span>
+          <details class="sources"><summary>সূত্রগুলো দেখুন · Sources</summary><ul id="legalSources"></ul></details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wayout" id="wayout">
+    <div class="wrap">
+      <div class="wayout-head">
+        <div class="exit" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="6" y="6" width="26" height="52" rx="2" fill="none" stroke="#0E4B3B" stroke-width="5"/><circle cx="25" cy="33" r="2.5" fill="#0E4B3B"/><path d="M38 32h20M49 22l10 10-10 10" fill="none" stroke="#0E4B3B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><h2>প্রতারণা থেকে বের হওয়ার পথ আছে</h2>
+          <p>অমিল ধরা পড়লে চুপ করে থাকবেন না। সরকার আর আইন দুটোই আপনাকে সাহায্য করতে পারে, শুধু কোথায় যেতে হবে জানা দরকার। <span class="en" style="display:inline;color:#A9C6B9">There is a way out. Here is where to go, in order.</span></p></div>
+      </div>
+      <div class="emergency"><b>জীবন বা নিরাপত্তা ঝুঁকিতে?</b> দেশে এখনই <a class="call" href="tel:999">৯৯৯</a> ফোন করুন। বিদেশে নিকটস্থ বাংলাদেশ দূতাবাসে যোগাযোগ করুন।</div>
+      <div class="lanes">
+        <div class="lane">
+          <h3>দেশে আছেন</h3>
+          <p>টাকা দিয়েছেন বা দিতে যাচ্ছেন, এখনো যাননি বা ফিরে এসেছেন</p>
+          <ol>
+            <li><b>আর টাকা দেবেন না, প্রমাণ রাখুন</b><p>রসিদ, ভয়েস নোট, ভিসার ছবি আর প্রতিশ্রুতি রেকর্ড সংরক্ষণ করুন।</p><span class="tag">প্রতিশ্রুতি রেকর্ড = তারিখসহ প্রমাণ</span></li>
+            <li><b>প্রবাসবন্ধু কল সেন্টারে ফোন করুন</b><p>সরকারি, বিনা খরচে, ২৪ ঘণ্টা খোলা।</p><a class="call" href="tel:16135">১৬১৩৫ <small>টোল ফ্রি</small></a></li>
+            <li><b>বিএমইটি-তে অভিযোগ করুন</b><p>বিএমইটি বা আপনার জেলার জনশক্তি অফিসে (DEMO) অভিযোগ দিলে সালিশে টাকা ফেরত বা ক্ষতিপূরণ পাওয়া যায়।</p><span class="tag">অভিযোগের খসড়া: শিগগির আসছে</span></li>
+            <li><b>বিনা খরচে আইনি সহায়তা নিন</b><p>সরকারি লিগ্যাল এইড মামলা করতে সাহায্য করে (অভিবাসী আইন ২০১৩, ধারা ২৮ ও ৩১)।</p><a class="call" href="tel:16699">১৬৬৯৯ <small>লিগ্যাল এইড</small></a></li>
+          </ol>
+        </div>
+        <div class="lane">
+          <h3>বিদেশে আছেন</h3>
+          <p>বেতন কম, কাজ আলাদা, বা আটকে আছেন</p>
+          <ol>
+            <li><b>কাগজের ছবি নিজের কাছে রাখুন</b><p>পাসপোর্ট, ভিসা, চুক্তি আর বেতনের স্লিপের ছবি নিজের ফোনে আর পরিবারের কাছে রাখুন।</p></li>
+            <li><b>দেশে প্রবাসবন্ধুতে ফোন করুন</b><p>বিদেশ থেকেও একই সেবা পাওয়া যায়।</p><a class="call" href="tel:+8809610102030">+৮৮০ ৯৬১০ ১০২০৩০</a></li>
+            <li><b>দূতাবাসের শ্রম কল্যাণ উইং</b><p>বাংলাদেশ দূতাবাসের শ্রম কল্যাণ উইং নিয়োগকর্তা ও এজেন্সির সাথে কথা বলে, প্রয়োজনে ফেরার ব্যবস্থা করে।</p></li>
+            <li><b>দেশে ফেরার অধিকার</b><p>এজেন্সির দোষে ফিরতে হলে খরচ এজেন্সির (ধারা ২৯)। ফিরে এসে বিএমইটি-তে অভিযোগ করুন।</p><span class="tag">বেতনের স্লিপ দিলে প্রতিশ্রুতি অমিল ধরে</span></li>
+          </ol>
+        </div>
+      </div>
+      <p class="reality"><b>সৎভাবে বলি:</b> বিএমইটি-র সালিশে সাধারণত অন্তত চার মাস লাগে, আর ক্ষতিপূরণ অনেক সময় দাবির চেয়ে কম হয়। তাই শুরু থেকেই প্রমাণ রাখা সবচেয়ে জরুরি, আর সেখানেই প্রতিশ্রুতি কাজে লাগে। <span class="en" style="display:inline;color:#A9C6B9">Arbitration usually takes at least four months and awards are often small, so evidence from day one matters most.</span></p>
+    </div>
+  </section>
+
   <section class="wa" id="whatsapp">
     <div class="wrap wa-grid">
       <div class="phone" aria-hidden="true">
@@ -565,7 +827,7 @@ footer .chain i.on { background: #2E9E6B; }
         <div><b>পরিচয়ের নম্বর ঢেকে দেওয়া হয়</b><p>লেখা থেকে পাসপোর্ট, NID আর ফোন নম্বর AI-তে যাওয়ার আগেই ঢেকে দেওয়া হয়। ছবিতে এখনো নয়, তাই প্রোটোটাইপে শুধু নমুনা কাগজ দিন।</p></div>
         <div><b>“নিরাপদ” বলা হয় না</b><p>প্রতিশ্রুতি কখনো বলে না চাকরি বা কাগজ নিরাপদ বা আসল। শুধু বলে কী মিলেছে, কী মেলেনি, আর কী যাচাই করা যায়নি।</p></div>
         <div><b>রেকর্ড বদলানো যায় না</b><p>প্রতিটি যাচাইয়ের রেকর্ড আগেরটির হ্যাশের সাথে জোড়া। পরে কেউ বদলালে ধরা পড়ে। প্রিন্ট বা PDF করে রাখা যায়।</p></div>
-        <div><b>সিদ্ধান্ত আপনার</b><p>সন্দেহ হলে টাকা দেওয়ার আগে প্রবাসী কল্যাণ হেল্পলাইন বা কোনো অভিবাসী অধিকার সংস্থার সাথে কথা বলুন।</p></div>
+        <div><b>সিদ্ধান্ত আপনার</b><p>প্রতিশ্রুতি তথ্য দেয়, সিদ্ধান্ত আপনার। সন্দেহ হলে টাকা দেওয়ার আগে প্রবাসবন্ধু ১৬১৩৫ বা লিগ্যাল এইড ১৬৬৯৯-এ কথা বলুন।</p></div>
       </div>
     </div>
   </section>
@@ -755,6 +1017,43 @@ f.addEventListener('submit', async (e) => {
   }
 });
 
+/* ---------- Rights: fee calculator + sources ---------- */
+const bnMoney = n => bn(Math.round(n).toLocaleString('en-IN'));
+const toNum = v => Number(String(v).replace(/[০-৯]/g, d => '০১২৩৪৫৬৭৮৯'.indexOf(d)).replace(/[^\d.]/g, '')) || 0;
+let CAPS = null;
+function feeUpdate() {
+  if (!CAPS) return;
+  const code = $('feeCountry').value, cap = CAPS.caps_bdt[code], paid = toNum($('feeAmount').value);
+  const max = Math.max(cap * 1.15, paid * 1.05);
+  $('feeCap').style.left = (cap / max * 100) + '%';
+  $('feeCapLabel').textContent = 'সরকারি সীমা ' + bnMoney(cap);
+  $('feeFill').style.width = (paid / max * 100) + '%';
+  $('feeFill').classList.toggle('over', paid > cap);
+  const out = $('feeOut');
+  if (!paid) { out.className = 'calc-out'; out.textContent = 'টাকার পরিমাণ দিন'; }
+  else if (paid > cap) {
+    out.className = 'calc-out over';
+    out.textContent = `সীমার চেয়ে ${bnMoney(paid - cap)} টাকা বেশি (${bn((paid / cap).toFixed(1))} গুণ)`;
+  } else { out.className = 'calc-out ok'; out.textContent = 'সরকারি সীমার মধ্যে আছে'; }
+  $('feeNote').textContent = paid > cap
+    ? 'বেশি টাকা নেওয়ার অভিযোগ বিএমইটি-তে করা যায়। রসিদ চান, প্রমাণ রাখুন, প্রবাসবন্ধু ১৬১৩৫-এ ফোন করুন।'
+    : 'সীমার মধ্যে থাকলেও প্রতিটি টাকার রসিদ নিন।';
+  const sp = (CAPS.special || {})[code];
+  $('feeSpecial').hidden = !sp; $('feeSpecial').textContent = sp || '';
+}
+fetch('/api/legal').then(r => r.ok ? r.json() : null).then(d => {
+  if (!d) return;
+  CAPS = d.caps;
+  $('feeCountry').innerHTML = Object.keys(CAPS.caps_bdt).map(c =>
+    `<option value="${c}">${esc(CAPS.names_bn[c] || c)}: সীমা ${bnMoney(CAPS.caps_bdt[c])} টাকা</option>`).join('');
+  $('feeSrc').innerHTML = `সূত্র: <a href="${esc(CAPS.sources._list)}" target="_blank" rel="noopener">সরকারি খরচের তালিকা</a>; মালয়েশিয়া: <a href="${esc(CAPS.sources.MY)}" target="_blank" rel="noopener">সংশোধিত সীমা</a>। আইনি দল চূড়ান্ত যাচাই করবে।`;
+  $('legalSources').innerHTML = d.sources.map(s => `<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a></li>`).join('');
+  feeUpdate();
+}).catch(() => {});
+$('feeCountry').addEventListener('change', feeUpdate);
+$('feeAmount').addEventListener('input', feeUpdate);
+document.querySelectorAll('[data-amt]').forEach(b => b.addEventListener('click', () => { $('feeAmount').value = b.dataset.amt; feeUpdate(); }));
+
 const SEV = { critical: 'গুরুতর', warning: 'সতর্কতা', info: 'তথ্য' };
 
 function render(d) {
@@ -786,7 +1085,14 @@ function render(d) {
         <div><small>যা বলা হয়েছিল · Promised</small><strong>${esc(fl.promised || '—')}</strong></div>
         <div><small>যা পাওয়া গেছে · Found</small><strong>${esc(fl.found || '—')}</strong></div></div>` : ''}
       <p class="src">সূত্র: ${esc(fl.source)}</p>
-    </div></article>`).join('');
+      ${(fl.law_bn || fl.action_bn) ? `<div class="law">
+        ${fl.law_bn ? `<div><small>আইন কী বলে</small><p>${esc(fl.law_bn)}</p></div>` : ''}
+        ${fl.action_bn ? `<div><small>এখন যা করবেন</small><p>${esc(fl.action_bn)}</p></div>` : ''}</div>` : ''}
+    </div></article>`).join('') + (d.flags.length ? `
+    <div class="helpstrip"><span>সাহায্য দরকার?</span>
+      <a class="call" href="tel:16135">১৬১৩৫ <small>প্রবাসবন্ধু</small></a>
+      <a class="call" href="tel:16699">১৬৬৯৯ <small>বিনা খরচে আইনি সহায়তা</small></a>
+      <a class="link" href="#wayout">বের হওয়ার পথ দেখুন</a></div>` : '');
 
   $('explain').textContent = d.explanation_bn;
   $('notchecked').innerHTML = d.not_checked.map(x => `<li>${esc(x)}</li>`).join('');

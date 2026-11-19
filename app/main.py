@@ -76,6 +76,14 @@ def public_config():
             "whatsapp_link": f"https://wa.me/{n}?text=%E0%A6%B8%E0%A6%BE%E0%A6%B9%E0%A6%BE%E0%A6%AF%E0%A7%8D%E0%A6%AF" if n else None}
 
 
+@app.get("/api/legal")
+def legal_info():
+    """Cost caps + legal sources for the website's rights section and fee calculator."""
+    from . import legal
+    caps = json.loads((Path(__file__).resolve().parent.parent / "data" / "cost_caps.json").read_text(encoding="utf-8"))
+    return {"caps": caps, "sources": [{"title": t, "url": u} for t, u in legal.LEGAL_SOURCES]}
+
+
 @app.post("/api/transcribe")
 async def transcribe(audio: UploadFile = File(...)):
     """Speech-to-text only, so the worker can read and correct the text before the check."""

@@ -4,10 +4,10 @@ Production prompts live in `app/prompts.py` (the source of truth). This file rec
 
 | ID | Version | Used by | Model | Purpose |
 |---|---|---|---|---|
-| EXTRACT_PROMISE | V1 | `app/extract.py` | Gemini Flash / Claude | Voice-note transcript → promise JSON |
-| READ_DOCUMENT | V1 | `app/docreader.py` | Gemini Flash / Claude / Qwen3-VL | Document photo → promise JSON |
-| EXPLAIN_FLAGS | V1 | `app/explain.py` | Gemini Flash / Claude | Rule flags → plain-Bangla explanation |
-| COMPLAINT_DRAFT | V1 | (Phase 2) | Gemini Flash / Claude | Promise Record → complaint draft |
+| EXTRACT_PROMISE | V1 | `app/extract.py` | Groq qwen/qwen3.8-27b (default); Gemini / Claude optional | Voice-note transcript → promise JSON |
+| READ_DOCUMENT | V1 | `app/docreader.py` | Groq qwen/qwen3.8-27b (vision); Gemini / Claude optional | Document photo → promise JSON |
+| EXPLAIN_FLAGS | V1 | `app/explain.py` | Bangla template by default; Gemini / Claude optional | Rule flags → plain-Bangla explanation |
+| COMPLAINT_DRAFT | V1 | (Phase 2) | not used yet | Promise Record → complaint draft |
 
 ## Design rules for every prompt
 1. The model reads and explains; it never decides a flag (flags come from `app/rules.py`).

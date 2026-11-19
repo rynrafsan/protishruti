@@ -109,7 +109,7 @@ async def run_check(user: str):
     slips = [d for d in s["docs"] if d.source == "payslip"]
     flags = rules.run_rules(promise, docs, slips)
     missing = rules.not_checked(promise, docs)
-    text = explain.explain(flags, missing)
+    text = explain.explain(flags, missing, with_law=True)
     result = CheckResult(transcript=redact("\n".join(s["transcripts"])), promise=promise, documents=docs, payslips=slips, flags=flags,
                          not_checked=missing, explanation_bn=text)
     rid, _ = record.save_record(result, s["attachments"])

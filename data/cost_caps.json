@@ -1,15 +1,24 @@
 {
-  "_note": "Government-fixed maximum migration costs in BDT. VERIFY each figure against the latest Ministry of Expatriates' Welfare circular before any real use. Sources: Bonik Barta (2016 fee table), Dhaka Tribune (Malaysia 2021, Kuwait).",
-  "_sources": [
-    "https://en.bonikbarta.com/bangladesh/NYU3qQDrJyU2Ewbx/",
-    "https://www.dhakatribune.com/amp/bangladesh/399203/highest-costs-lowest-returns-bangladeshi"
-  ],
+  "_note": "Government-fixed maximum migration cost per worker in BDT (Bangladesh end). Compiled from news reports of the official circulars; a legal team will verify each figure against the latest Ministry of Expatriates' Welfare circular. Singapore is left out because reports disagree.",
+  "as_of": "2026-11-19",
   "caps_bdt": {
-    "SA": 165000,
-    "MY": 78990,
-    "OM": 100780,
-    "QA": 100780,
-    "AE": 107780,
-    "KW": 106780
+    "SA": 165000, "MY": 78990, "QA": 100780, "OM": 100780, "AE": 107780, "KW": 106780,
+    "BH": 97780, "JO": 102780, "LB": 117780, "IQ": 129540, "LY": 145780, "EG": 120780,
+    "MV": 115780, "BN": 120780, "RU": 166640
+  },
+  "names_bn": {
+    "SA": "সৌদি আরব", "MY": "মালয়েশিয়া", "QA": "কাতার", "OM": "ওমান", "AE": "সংযুক্ত আরব আমিরাত",
+    "KW": "কুয়েত", "BH": "বাহরাইন", "JO": "জর্ডান", "LB": "লেবানন", "IQ": "ইরাক", "LY": "লিবিয়া",
+    "EG": "মিসর", "MV": "মালদ্বীপ", "BN": "ব্রুনাই", "RU": "রাশিয়া"
+  },
+  "special": {
+    "SA": "সৌদি আরবে নারী গৃহকর্মীদের জন্য খরচ শূন্য টাকা (\"জিরো কস্ট\" চুক্তি)। Female domestic workers to Saudi Arabia: zero cost."
+  },
+  "sources": {
+    "SA": "https://www.thedailystar.net/frontpage/saudi-job-tk-165-lakh-1278076",
+    "MY": "https://www.tbsnews.net/node/454158",
+    "_list": "https://www.dhakatribune.com/bangladesh/399203/highest-costs-lowest-returns-bangladeshi",
+    "_list2": "https://thefinancialexpress.com.bd/economy/record-number-of-workers-went-abroad-in-2017-1516033631",
+    "_zero_cost": "https://www.thedailystar.net/node/2959876"
   }
 }

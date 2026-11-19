@@ -58,6 +58,8 @@ class Flag(BaseModel):
     promised: Optional[str] = None
     found: Optional[str] = None
     source: str  # the law / table / document the flag rests on
+    law_bn: Optional[str] = None     # what the law says (plain Bangla), from app/legal.py
+    action_bn: Optional[str] = None  # where to go next
 
 
 class CheckResult(BaseModel):

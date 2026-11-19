@@ -282,7 +282,8 @@ def run_rules(promise: Promise, docs: list[Promise], slips: list[Promise] | None
     for rule in POST_ARRIVAL_RULES:
         flags += rule(promise, docs, slips)
     order = {"critical": 0, "warning": 1, "info": 2}
-    return sorted(flags, key=lambda f: order[f.severity])
+    from .legal import attach  # local import: legal imports schema only
+    return attach(sorted(flags, key=lambda f: order[f.severity]))
 
 
 def not_checked(promise: Promise, docs: list[Promise]) -> list[str]:
