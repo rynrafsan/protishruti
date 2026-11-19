@@ -30,8 +30,31 @@ GRAPH = f"https://graph.facebook.com/{os.getenv('WA_API_VERSION', 'v22.0')}"
 
 SESSIONS: dict[str, dict] = defaultdict(lambda: {"transcripts": [], "docs": [], "attachments": {},
                                                  "from_voice": False})
+def format_answer(res: dict) -> str:
+    """A rights answer as one WhatsApp message: answer, call numbers, sources, a next question."""
+    from urllib.parse import urlparse
+    from .rag import bn_money
+    parts = [res["answer"]]
+    if res.get("table"):
+        parts.append("\n".join(f"• {r['country']}: {bn_money(r['cap_bdt'])} টাকা" for r in res["table"]))
+    calls = [f"{a['label']} ({a['note']})" for a in res.get("actions", []) if a["href"].startswith("tel:")]
+    if calls:
+        parts.append("📞 " + " · ".join(calls))
+    links = [a["href"] for a in res.get("actions", []) if a["href"].startswith("http")]
+    if links:
+        parts.append("🔗 " + " ".join(links))
+    srcs = [f"[{h['n']}] {h['section']} ({urlparse(h['source']).netloc.replace('www.', '')})"
+            for h in res.get("sources", [])[:3] if h.get("source")]
+    if srcs:
+        parts.append("সূত্র:\n" + "\n".join(srcs))
+    if res.get("related"):
+        parts.append(f"আরও জানতে লিখুন: প্রশ্ন {res['related'][0]}")
+    return "\n\n".join(parts)
+
+
 HELP = ("প্রতিশ্রুতি (প্রোটোটাইপ)। ১) দালাল কী বলেছে তা ভয়েস বা লিখে পাঠান। "
-        "২) ভিসা/চুক্তির ছবি পাঠান। ৩) 'check' লিখুন। শুধু নমুনা (SPECIMEN) কাগজ ব্যবহার করুন।")
+        "২) ভিসা/চুক্তির ছবি পাঠান। ৩) 'check' লিখুন। শুধু নমুনা (SPECIMEN) কাগজ ব্যবহার করুন। "
+        "অধিকার নিয়ে প্রশ্ন থাকলে 'প্রশ্ন' লিখে প্রশ্নটি পাঠান, যেমন: প্রশ্ন সৌদি যেতে সরকারি খরচ কত?")
 
 
 @router.get("/webhook")
@@ -78,6 +101,13 @@ async def handle_message(msg: dict):
                 await run_check(user)
             elif text.lower() in ("help", "সাহায্য", "hi", "hello"):
                 await send_text(user, HELP)
+            elif text.startswith(("?", "প্রশ্ন", "প্রশ্ন:")):
+                from . import rag
+                q = text.lstrip("?").replace("প্রশ্ন:", "").replace("প্রশ্ন", "", 1).strip()
+                if not q:
+                    await send_text(user, "প্রশ্নটি লিখুন, যেমন: প্রশ্ন সৌদি যেতে সরকারি খরচ কত?")
+                else:
+                    await send_text(user, format_answer(rag.answer(redact(q))))
             else:
                 s["transcripts"].append(text)
                 await send_text(user, "লিখে রাখা হলো। কাগজের ছবি পাঠান, তারপর 'check' লিখুন।")

@@ -49,7 +49,14 @@ LEGAL_SOURCES = [
 
 
 def attach(flags: list[Flag]) -> list[Flag]:
+    """Add the law + next step (fixed map) and the knowledge-base passages that back them (retrieval)."""
+    from . import rag
     for f in flags:
         if f.rule_id in LEGAL and not f.law_bn:
             f.law_bn, f.action_bn = LEGAL[f.rule_id]
+        if not f.refs:
+            try:
+                f.refs = rag.refs_for_flag(f"{f.title_bn} {f.law_bn or ''}")
+            except Exception:  # retrieval must never break a check
+                f.refs = []
     return flags

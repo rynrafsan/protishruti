@@ -76,7 +76,8 @@ def render_html(record_id: str) -> str:
         {f"<dt>যা পাওয়া গেছে</dt><dd>{e(str(f['found']))}</dd>" if f.get('found') else ''}
         <dt>সূত্র</dt><dd>{e(f['source'])}</dd>
         {f"<dt>আইন কী বলে</dt><dd>{e(f['law_bn'])}</dd>" if f.get('law_bn') else ''}
-        {f"<dt>এখন যা করবেন</dt><dd>{e(f['action_bn'])}</dd>" if f.get('action_bn') else ''}</dl></div></div>"""
+        {f"<dt>এখন যা করবেন</dt><dd>{e(f['action_bn'])}</dd>" if f.get('action_bn') else ''}
+        {("<dt>যাচাই করা সূত্র</dt><dd>" + "; ".join(f"{e(r['section'])} ({e(r['source'])})" for r in f.get('refs', [])) + "</dd>") if f.get('refs') else ''}</dl></div></div>"""
         for f in r["flags"]) or "<p>দেখানো কাগজে অমিল পাওয়া যায়নি। এর মানে চাকরিটি নিরাপদ, তা নয়।</p>"
     atts = "".join(f"<li>{e(n)}<code>{h}</code></li>" for n, h in body["attachments_sha256"].items())
     heard = (f"<h2>যা শোনা বা পড়া হয়েছে</h2><blockquote>{e(r['transcript'])}</blockquote>"

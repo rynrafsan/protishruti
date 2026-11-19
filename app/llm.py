@@ -82,7 +82,8 @@ def _anthropic(system: str, prompt: str, image: Optional[bytes], mime: Optional[
 
 
 def _openai_compatible(system: str, prompt: str, image: Optional[bytes], mime: Optional[str],
-                       want_json: bool) -> str:
+                       want_json: bool, max_tokens: Optional[int] = None, timeout: Optional[float] = None,
+                       wait_on_quota: bool = True) -> str:
     import httpx
 
     if not config.OPENAI_API_KEY and "localhost" not in config.OPENAI_BASE_URL:
@@ -92,7 +93,8 @@ def _openai_compatible(system: str, prompt: str, image: Optional[bytes], mime: O
         url = f"data:{mime or 'image/jpeg'};base64,{base64.b64encode(image).decode()}"
         content.append({"type": "image_url", "image_url": {"url": url}})
     content.append({"type": "text", "text": prompt + ("\nRespond with JSON only." if want_json else "")})
-    body = {"model": config.OPENAI_MODEL, "temperature": 0, "max_tokens": config.LLM_MAX_TOKENS,
+    timeout = timeout or TIMEOUT_S
+    body = {"model": config.OPENAI_MODEL, "temperature": 0, "max_tokens": max_tokens or config.LLM_MAX_TOKENS,
             "messages": [{"role": "system", "content": system}, {"role": "user", "content": content}]}
     if "groq.com" in config.OPENAI_BASE_URL:
         body["reasoning_effort"] = "none"  # no hidden "thinking": faster, and it doesn't eat the token quota
@@ -100,27 +102,29 @@ def _openai_compatible(system: str, prompt: str, image: Optional[bytes], mime: O
         body["response_format"] = {"type": "json_object"}
     headers = {"Authorization": f"Bearer {config.OPENAI_API_KEY}"}
     url = f"{config.OPENAI_BASE_URL}/chat/completions"
-    r = httpx.post(url, json=body, headers=headers, timeout=TIMEOUT_S)
+    r = httpx.post(url, json=body, headers=headers, timeout=timeout)
     # Options a model may not support: drop them one at a time and retry.
     for opt in ("reasoning_effort", "response_format"):
         if r.status_code == 400 and opt in body:
             body.pop(opt)
-            r = httpx.post(url, json=body, headers=headers, timeout=TIMEOUT_S)
-    if r.status_code == 429:  # per-minute quota: wait once, as the server asks (max 30 s)
+            r = httpx.post(url, json=body, headers=headers, timeout=timeout)
+    if r.status_code == 429 and wait_on_quota:  # per-minute quota: wait once, as the server asks (max 30 s)
         try:
             wait = float(r.headers.get("retry-after", "10"))
         except ValueError:
             wait = 10.0
         if wait <= 30:
             time.sleep(wait)
-            r = httpx.post(url, json=body, headers=headers, timeout=TIMEOUT_S)
+            r = httpx.post(url, json=body, headers=headers, timeout=timeout)
     if r.status_code >= 400:
         raise LLMError(f"{r.status_code} from {config.OPENAI_BASE_URL}: {r.text[:300]}")
     return r.json()["choices"][0]["message"].get("content") or ""
 
 
 def call(system: str, prompt: str, image: Optional[bytes] = None, mime: Optional[str] = None,
-         want_json: bool = True):
+         want_json: bool = True, **opts):
+    """opts (OpenAI-compatible providers only): max_tokens, timeout, wait_on_quota=False to fail fast
+    on a 429 so a caller with a fallback (the rights Q&A) answers at once instead of waiting."""
     global _down_until
     provider = config.LLM_PROVIDER
     fn = {"gemini": _gemini, "anthropic": _anthropic, "groq": _openai_compatible,
@@ -130,7 +134,8 @@ def call(system: str, prompt: str, image: Optional[bytes] = None, mime: Optional
     if time.time() < _down_until:  # the provider just timed out: fail fast, the caller falls back
         raise LLMError(f"{provider} skipped: it timed out or was unavailable less than {COOLDOWN_S}s ago")
     try:
-        text = fn(system, prompt, image, mime, want_json)
+        text = fn(system, prompt, image, mime, want_json, **opts) if fn is _openai_compatible \
+            else fn(system, prompt, image, mime, want_json)
     except Exception as e:
         if _is_outage(e):
             _down_until = time.time() + COOLDOWN_S

@@ -84,6 +84,27 @@ def legal_info():
     return {"caps": caps, "sources": [{"title": t, "url": u} for t, u in legal.LEGAL_SOURCES]}
 
 
+@app.post("/api/ask")
+async def ask(question: str = Form(..., max_length=500)):
+    """Rights Q&A: retrieval-augmented answer from the sourced knowledge base, with citations."""
+    from . import rag
+    q = redact(question.strip())
+    if not q:
+        raise HTTPException(400, "একটি প্রশ্ন লিখুন। Write a question.")
+    res = await _step("Answering a rights question", rag.answer, q)
+    res["question"] = q  # as searched, with phone/passport/NID numbers masked
+    return res
+
+
+@app.get("/api/ask/topics")
+def ask_topics():
+    """What the knowledge base covers: topics, suggested questions, sections and sources."""
+    from . import rag
+    idx = rag.get_index()
+    return {"topics": rag.topics(), "passages": len(idx.chunks),
+            "contextual": rag.CONTEXTS_FILE.exists(), "generate": config.RAG_GENERATE and config.LLM_PROVIDER != "mock"}
+
+
 @app.post("/api/transcribe")
 async def transcribe(audio: UploadFile = File(...)):
     """Speech-to-text only, so the worker can read and correct the text before the check."""

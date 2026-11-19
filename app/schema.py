@@ -60,6 +60,7 @@ class Flag(BaseModel):
     source: str  # the law / table / document the flag rests on
     law_bn: Optional[str] = None     # what the law says (plain Bangla), from app/legal.py
     action_bn: Optional[str] = None  # where to go next
+    refs: list[dict] = Field(default_factory=list)  # knowledge-base passages backing the flag (RAG)
 
 
 class CheckResult(BaseModel):

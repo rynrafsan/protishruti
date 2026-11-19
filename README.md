@@ -17,18 +17,40 @@ payslips          ─▶ document reader ─┘                       ▲ cost c
 ```
 
 - **Rules decide, AI explains.** `app/rules.py` is the only place that raises a flag.
+- **Rights answers use RAG.** `app/rag.py` retrieves cited passages from `data/knowledge/` (see section 0.1).
 - 12 rules: R01 job mismatch · R02 domestic-worker visa · R03 employer name · R04 salary · R05 fee above cap · R06 agency licence · R07 no contract · R08 risky corridor · R09 visa expiry · R10 underpaid · R11 large deductions · R12 late salary.
 
 ```
 app/            FastAPI app (schema, rules, extract, docreader, asr, explain, record, whatsapp)
 data/           reference data: cost caps, FX, agency list (sample), watchlist
+data/knowledge/ RAG knowledge base: OEMA 2013, fee caps, complaints, helplines, agencies (each section cites a source URL)
 frontend/       single-page upload UI (served at /)
 tools/synth/    synthetic case generator + renderer
-tools/          evaluate.py (rule recall), asr_eval.py (WER per dialect)
+tools/          evaluate.py (rule recall), asr_eval.py (WER per dialect), rag_eval.py, rag_contexts.py
 tests/          pytest unit tests
 CLAUDE.md       context file for AI coding assistants
 PROMPTS.md      prompt library (for the submission form)
 ```
+
+### 0.1 Rights Q&A (RAG)
+
+```
+question ─▶ redact (phone/passport/NID) ─▶ understand: Banglish → Bangla, everyday words and situations → legal terms,
+                                            country + amount paid
+   ├─ fee question? ─▶ government table (data/cost_caps.json): cap, average actually paid, over-payment worked out
+   └─ otherwise ─▶ BM25 (keywords; the user's words weigh more than added synonyms)
+                 ─▶ TF-IDF character 3–5-gram vectors (meaning-ish, spelling-tolerant)
+                 ─▶ Reciprocal Rank Fusion ─▶ relevance gate (refuse if nothing really matches) ─▶ top 4 passages
+                 ─▶ AI writes a cited answer (ANSWER_PROMPT_V2) ─▶ grounding check: every [n] exists and every
+                    number is in the passages; fails, AI busy or no AI ─▶ best sentences word for word
+```
+
+- **Knowledge base:** 6 markdown files in `data/knowledge/` (28 passages): OEMA 2013, fee caps, complaints, helplines, agencies, safe migration. Every section ends with `সূত্র: <URL>`. Chunking follows the `##` sections, split only above 900 characters.
+- **Contextual retrieval:** each passage is indexed with "document > section"; `python tools/rag_contexts.py` adds an AI-written context sentence per passage and saves `contexts.json` (commit it).
+- **Answer modes:** `fact` (fee table, exact), `generated` (AI from passages, passed the grounding check), `extractive` (best sentences word for word), `no_match` (refuses and gives 16135). Each answer also returns confidence, call buttons (16135, 16699, 999, OEP), highlighted source sentences, follow-up questions and retrieval scores.
+- **Where it is used:** `POST /api/ask` and `GET /api/ask/topics` (website "অধিকার নিয়ে প্রশ্ন করুন", with voice questions), WhatsApp messages starting with `প্রশ্ন` or `?`, every flag's `refs`, and the "এ নিয়ে প্রশ্ন করুন" link under each warning.
+- **Settings:** `RAG_GENERATE=true` lets the AI write answers (Groq: about 500 tokens each; on the free tier's per-minute limit it falls back at once instead of waiting). `false` = offline sentences only.
+- **Evaluation:** `python tools/rag_eval.py` (offline, no AI calls). 41 tuning questions in Bangla, Banglish and English: hit@3 100%, key fact in the answer 41/41, 5/5 off-topic refused. 16 held-out questions written after tuning, **first run**: hit@1 88%, hit@3 100%, MRR 0.94, key fact 12/16 (75%); the four misses were general gaps that are now fixed (16/16), so that set is no longer unseen.
 
 ---
 
@@ -189,7 +211,7 @@ The webhook replies at once and does the work in a background task, because Meta
 | 22–25 Dec | Code freeze, rehearsal, backup demo video |
 
 ## Metrics to report
-Recall per rule (`tools/evaluate.py`), WER per dialect (`tools/asr_eval.py`), field-extraction accuracy on rendered documents, the false "all clear" rate, and time from upload to answer.
+Recall per rule (`tools/evaluate.py`), retrieval hit@3 and MRR (`tools/rag_eval.py`), WER per dialect (`tools/asr_eval.py`), field-extraction accuracy on rendered documents, the false "all clear" rate, and time from upload to answer.
 
 ## Troubleshooting
 - `ASR is disabled` → set `ASR_ENABLED=true` and install `requirements-asr.txt` and ffmpeg.

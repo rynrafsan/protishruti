@@ -379,6 +379,128 @@ details.sources ul { margin: 8px 0 0; padding-left: 20px; }
   .wayout-head { grid-template-columns: 1fr; }
 }
 
+/* ---------- Ask (RAG): a help-desk reply slip ---------- */
+.ask { padding: 80px 0; }
+.askdesk { background: var(--sheet); border: 1px solid var(--line); border-top: 4px solid var(--green); padding: 22px 24px 18px; margin-top: 26px; }
+.q-row { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: stretch; }
+.q-row input { font: 18px var(--body); color: var(--ink); padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 4px; background: #fff; min-width: 0; }
+.q-row input:focus { outline: none; border-color: var(--green-600); box-shadow: 0 0 0 3px rgba(27,107,83,.18); }
+.q-row .go { padding: 12px 24px; font-size: 17px; }
+.mic { width: 52px; border: 1.5px solid var(--green-600); color: var(--green-600); background: #fff; border-radius: 4px; cursor: pointer; display: grid; place-items: center; }
+.mic:hover { background: #E3EEE8; }
+.mic.on { background: var(--red); border-color: var(--red); color: #fff; animation: pulse 1.2s infinite; }
+.mic svg { width: 22px; height: 22px; }
+.topics { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 18px 0 0; border-bottom: 1px solid var(--line); }
+.topics button { font: 500 15.5px/1.2 var(--body); background: none; border: 0; border-bottom: 3px solid transparent; color: var(--muted); padding: 8px 0 9px; cursor: pointer; margin-bottom: -1px; }
+.topics button[aria-selected="true"] { color: var(--green-900); border-bottom-color: var(--gold); font-weight: 600; }
+.topics button:hover { color: var(--green-900); }
+.qchips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; min-height: 36px; }
+.qchips button, .related button { font: 500 14.5px/1.3 var(--body); border: 1px dashed var(--green-600); background: transparent; color: var(--green-600); padding: 7px 12px; border-radius: 99px; cursor: pointer; text-align: left; }
+.qchips button:hover, .related button:hover { background: #E3EEE8; border-style: solid; }
+#askStatus { margin: 10px 0 0; min-height: 1.4em; font-size: 14.5px; color: var(--muted); }
+#askStatus .err { color: var(--red); font-weight: 600; }
+
+.ask-grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, .75fr); gap: 32px; margin-top: 26px; align-items: start; }
+.slip { background: #fff; border: 1px solid var(--line); position: relative; padding: 26px 28px 22px; box-shadow: 0 1px 0 var(--line), 0 10px 24px -18px rgba(10,58,46,.35); }
+.slip::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 6px; background: repeating-linear-gradient(90deg, var(--green) 0 18px, transparent 18px 26px); opacity: .85; }
+.slip-q { font: 400 22px/1.45 var(--display); color: var(--green-900); margin: 4px 150px 4px 0; }
+.slip-q::before { content: '“'; color: var(--gold); } .slip-q::after { content: '”'; color: var(--gold); }
+.slip-meta { font-size: 13.5px; color: var(--muted); margin: 0 150px 14px 0; }
+.slip .stamp { position: absolute; right: 22px; top: 26px; transform: rotate(-8deg); padding: 3px 10px 1px; border-width: 3px; }
+.slip .stamp b { font-size: 20px; }
+.slip .stamp small { font-size: 9.5px; letter-spacing: .2em; }
+.slip .stamp.high { color: var(--green-600); }
+.slip .stamp.medium { color: #2F6F8F; }
+.slip .stamp.low { color: var(--violet); }
+.slip .stamp.none { color: var(--red); }
+@keyframes thunk8 { 0% { transform: rotate(-8deg) scale(1.8); opacity: 0; } 60% { transform: rotate(-8deg) scale(.95); opacity: .95; } 100% { transform: rotate(-8deg) scale(1); opacity: .9; } }
+.slip .stamp.go-anim { animation: thunk8 .4s cubic-bezier(.2,.9,.3,1.2) both; }
+.a-body { font-size: 18px; line-height: 1.8; border-top: 1px dashed var(--line); padding-top: 14px; }
+.a-body p { margin: 0 0 8px; }
+.a-body ul { margin: 4px 0 10px; padding-left: 22px; }
+.a-body li { margin: 2px 0; }
+.a-body .disc { font-size: 14px; color: var(--muted); margin-top: 6px; }
+.cite { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 4px; margin: 0 2px; border-radius: 99px; background: #E3EEE8; color: var(--green-600); font: 600 12.5px/1 var(--body); text-decoration: none; vertical-align: 2px; }
+.cite:hover, .cite:focus { background: var(--green-600); color: #fff; }
+.a-mode { font-size: 13.5px; color: var(--muted); margin: 6px 0 0; padding-left: 10px; border-left: 3px solid var(--gold); }
+.feebar { margin: 14px 0 6px; display: grid; gap: 8px; }
+.feebar .row { display: grid; grid-template-columns: 112px 1fr auto; gap: 10px; align-items: center; font-size: 14.5px; }
+.feebar .row i { display: block; height: 14px; width: var(--w); min-width: 2px; background: var(--green-600); border-radius: 2px; }
+.feebar .row.paid i { background: var(--red); }
+.feebar .row b { font-weight: 600; white-space: nowrap; }
+.feebar .over { margin: 2px 0 0; color: var(--red); font-weight: 600; font-size: 15px; }
+.captable { margin: 12px 0 4px; columns: 2; column-gap: 24px; font-size: 14.5px; }
+.captable div { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 4px 0; border-bottom: 1px dotted var(--line); break-inside: avoid; }
+.captable div span { position: relative; }
+.captable div span i { position: absolute; left: 0; bottom: -3px; height: 2px; width: var(--w); background: var(--gold); }
+.a-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0 4px; }
+.callbtn { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; background: var(--green); color: #fff; border-radius: 4px; padding: 9px 14px 9px 12px; }
+.callbtn:hover { background: var(--green-600); }
+.callbtn svg { width: 18px; height: 18px; flex: none; }
+.callbtn b { display: block; font-weight: 600; font-size: 15.5px; line-height: 1.2; }
+.callbtn small { display: block; font-size: 12.5px; color: #CFE2D9; }
+.callbtn.web { background: #fff; color: var(--green-900); border: 1.5px solid var(--green-600); }
+.callbtn.web small { color: var(--muted); }
+.a-tools { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 10px 0 0; font-size: 14px; }
+.a-tools button, .a-tools a { background: none; border: 0; padding: 4px 0; color: var(--green-600); font: 500 14px var(--body); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.annex { margin-top: 20px; border-top: 2px solid var(--green-900); padding-top: 12px; }
+.annex h4, .related h4 { font: 400 18px/1.3 var(--display); color: var(--green-900); margin: 0 0 6px; }
+.annex ol { list-style: none; margin: 0; padding: 0; }
+.annex li { display: grid; grid-template-columns: 30px 1fr; gap: 10px; padding: 12px 0; border-top: 1px dashed var(--line); scroll-margin-top: 90px; }
+.annex li:first-child { border-top: 0; }
+.annex li.flash { background: #FBF5E4; transition: background .2s; }
+.annex .num { width: 26px; height: 26px; border-radius: 50%; background: var(--green-900); color: var(--gold-soft); display: grid; place-items: center; font: 400 14px/1 var(--display); }
+.annex b { display: block; color: var(--green-900); font-size: 15.5px; }
+.annex .doc { font-size: 13px; color: var(--muted); }
+.annex p { margin: 6px 0; font-size: 15px; line-height: 1.7; }
+.annex mark { background: linear-gradient(transparent 40%, var(--gold-soft) 40%); color: inherit; padding: 0 1px; }
+.annex a { font-size: 13.5px; color: var(--green-600); }
+.related { margin-top: 18px; }
+.related div { display: flex; flex-wrap: wrap; gap: 8px; }
+details.how { margin-top: 18px; border: 1px solid var(--line); background: var(--sheet); }
+details.how summary { cursor: pointer; padding: 10px 14px; font-weight: 600; color: var(--green-900); font-size: 15px; }
+details.how summary .en { display: inline; font-weight: 400; margin-left: 6px; }
+details.how .in { padding: 0 14px 14px; font-size: 14px; }
+details.how dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; margin: 4px 0 12px; }
+details.how dt { color: var(--muted); }
+details.how dd { margin: 0; }
+details.how .term { display: inline-block; background: #fff; border: 1px solid var(--line); border-radius: 3px; padding: 0 6px; margin: 0 4px 4px 0; font-size: 13px; }
+details.how table { width: 100%; border-collapse: collapse; font-size: 13px; }
+details.how th, details.how td { text-align: left; padding: 5px 6px; border-top: 1px solid var(--line); }
+details.how td.n { font-variant-numeric: tabular-nums; }
+.slip.empty .a-body { border-top: 0; padding-top: 0; }
+.kb { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 22px; margin: 12px 0 0; padding: 0; list-style: none; }
+.kb li { border-top: 1px solid var(--line); padding-top: 8px; font-size: 14.5px; }
+.kb b { display: block; color: var(--green-900); font-weight: 600; }
+.kb span { color: var(--muted); font-size: 13.5px; }
+.how-rag { background: var(--green-900); color: #DCE7E1; padding: 22px 24px; position: relative; overflow: hidden; }
+.how-rag::before { content: ''; position: absolute; inset: 0; background: var(--guilloche); filter: invert(1); opacity: .15; }
+.how-rag > * { position: relative; }
+.how-rag h3 { font: 400 22px/1.3 var(--display); color: #fff; margin: 0 0 12px; }
+.how-rag ol { margin: 0; padding: 0; list-style: none; counter-reset: s; }
+.how-rag li { counter-increment: s; display: grid; grid-template-columns: 30px 1fr; gap: 10px; padding: 8px 0; border-top: 1px solid rgba(255,255,255,.1); font-size: 14.5px; }
+.how-rag li::before { content: counter(s, bengali); width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--gold); color: var(--gold); display: grid; place-items: center; font: 400 13px/1 var(--display); }
+.how-rag li b { color: #fff; }
+.how-rag .stat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; font-size: 12.5px; color: #A9C6B9; }
+.how-rag .stat strong { display: block; font: 400 24px/1.1 var(--display); color: var(--gold-soft); }
+.how-rag .fine { color: #93B3A6; margin: 12px 0 0; font-size: 12.5px; line-height: 1.6; }
+.refs { margin: 10px 0 0; font-size: 13px; color: var(--muted); }
+.refs a { color: var(--green-600); margin-right: 10px; }
+.askthis { margin-top: 8px; background: none; border: 0; padding: 0; color: var(--green-600); font: 600 14px var(--body); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 960px) { .ask-grid { grid-template-columns: 1fr; } }
+@media (max-width: 680px) {
+  .askdesk { padding: 16px; }
+  .q-row { grid-template-columns: auto 1fr; }
+  .q-row .go { grid-column: 1 / -1; }
+  .slip { padding: 22px 16px 18px; }
+  .slip-q, .slip-meta { margin-right: 0; }
+  .slip .stamp { position: static; display: inline-block; margin: 0 0 10px; }
+  .captable { columns: 1; }
+  .kb { grid-template-columns: 1fr; }
+  .feebar .row { grid-template-columns: 92px 1fr; }
+  .feebar .row b { grid-column: 2; }
+}
+
 /* ---------- Safety + footer ---------- */
 .safety { padding: 72px 0; }
 .safety-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 48px; margin-top: 26px; }
@@ -444,6 +566,7 @@ footer .chain i.on { background: #2E9E6B; }
         <a href="#check">যাচাই করুন</a>
         <a href="#why">কেন প্রতিশ্রুতি</a>
         <a href="#rights">আপনার অধিকার</a>
+        <a href="#ask">প্রশ্ন করুন</a>
         <a href="#wayout">বের হওয়ার পথ</a>
         <a href="#whatsapp">WhatsApp</a>
       </nav>
@@ -751,6 +874,52 @@ footer .chain i.on { background: #2E9E6B; }
     </div>
   </section>
 
+
+  <section class="ask" id="ask">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>অধিকার নিয়ে প্রশ্ন করুন</h2>
+        <p>নিজের ভাষায় লিখুন বা বলুন: বাংলা, Banglish বা English। উত্তর আসে শুধু যাচাই করা সূত্র থেকে, প্রতিটি কথার পাশে সূত্রের নম্বরসহ। খরচের প্রশ্নে সরকারি তালিকা থেকে সরাসরি হিসাব। জানা না থাকলে অনুমান করে না, বলে কোথায় ফোন করবেন। <span class="en" style="display:inline">Ask in your own words. Every answer is cited; fee questions are worked out from the government table.</span></p>
+      </div>
+
+      <div class="askdesk">
+        <form id="askForm" class="q-row">
+          <button type="button" class="mic" id="askMic" hidden aria-label="প্রশ্নটি বলুন (রেকর্ড)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+          </button>
+          <label class="sr" for="askQ">আপনার প্রশ্ন</label>
+          <input id="askQ" maxlength="500" autocomplete="off" placeholder="যেমন: কাতার যেতে ৪ লাখ টাকা দিয়েছি, বেশি হয়েছে?">
+          <button class="go" id="askGo" type="submit">জিজ্ঞেস করুন</button>
+        </form>
+        <div class="topics" role="tablist" aria-label="বিষয় বেছে নিন" id="askTopics"></div>
+        <div class="qchips" id="askChips"></div>
+        <p id="askStatus" role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="ask-grid">
+        <article class="slip empty" id="slip" aria-live="polite">
+          <div class="a-body">
+            <p class="slip-q" style="margin-right:0">আপনার উত্তর এখানে আসবে</p>
+            <p>ওপরে একটি বিষয় বেছে প্রশ্নে চাপ দিন, বা নিজে লিখুন। যাচাইয়ের ফলাফলে কোনো সতর্কতা পেলে তার নিচের “এ নিয়ে প্রশ্ন করুন” চাপলেও এখানে উত্তর আসবে।</p>
+            <ul class="kb" id="kbList"></ul>
+          </div>
+        </article>
+        <aside class="how-rag">
+          <h3>উত্তর কীভাবে তৈরি হয়</h3>
+          <ol>
+            <li><div><b>যাচাই করা তথ্যভান্ডার।</b> অভিবাসী আইন ২০১৩, সরকারি খরচের সীমা, অভিযোগের পথ, হেল্পলাইন, এজেন্সি যাচাই ও নিরাপদ যাত্রা: প্রতিটি অংশের সাথে সূত্রের লিংক।</div></li>
+            <li><div><b>প্রশ্ন বোঝা।</b> Banglish ও English বাংলায় আনা হয়; “দালাল”, “নালিশ”, “বেতন দেয় না”-র মতো রোজকার কথা আইনের শব্দে মেলানো হয়।</div></li>
+            <li><div><b>দুইভাবে খোঁজা।</b> শব্দ মিলিয়ে (BM25) আর বানানের মিল দেখে (vector), দুই তালিকা মিশিয়ে (RRF) সেরা অংশ বাছাই। মিল কম হলে উত্তর দেয় না।</div></li>
+            <li><div><b>খরচের প্রশ্নে সরাসরি হিসাব।</b> দেশ আর দেওয়া টাকা বুঝে সরকারি তালিকা থেকে সীমা, আর কত বেশি নেওয়া হয়েছে তার হিসাব।</div></li>
+            <li><div><b>শুধু সূত্র থেকে উত্তর।</b> AI নতুন কিছু বানাতে পারে না: উত্তরের প্রতিটি সংখ্যা সূত্রের সাথে মেলানো হয়, না মিললে সূত্রের বাক্য হুবহু দেখানো হয়।</div></li>
+          </ol>
+          <div class="stat"><span><strong>১০০%</strong>সঠিক অংশ সেরা ৩-এ (৫৭টি প্রশ্ন)</span><span><strong>৭৫%</strong>নতুন প্রশ্নে প্রথম চেষ্টায় মূল তথ্য</span><span><strong>৫/৫</strong>অপ্রাসঙ্গিক প্রশ্ন বাতিল</span></div>
+          <p class="fine">৪১টি পরীক্ষা প্রশ্নে টিউন করা, তারপর ১৬টি নতুন প্রশ্নে যাচাই। নতুন প্রশ্নের ভুলগুলো ঠিক করার পর সবগুলোতে মূল তথ্য আসে, কিন্তু সৎ হিসাব প্রথম চেষ্টার ৭৫%। সব হিসাব: <code>tools/rag_eval.py</code>। আইনি তথ্য, আইনি পরামর্শ নয়।</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
   <section class="wayout" id="wayout">
     <div class="wrap">
       <div class="wayout-head">
@@ -860,6 +1029,7 @@ let voiceOn = true;
 fetch('/api/public-config').then(r => r.ok ? r.json() : null).then(c => {
   if (!c) return;
   voiceOn = !!c.asr_enabled;
+  $('askMic').hidden = !(voiceOn && navigator.mediaDevices && window.MediaRecorder);
   const ai = c.llm_provider && c.llm_provider !== 'mock';
   $('stVoice').className = voiceOn ? 'on' : '';
   $('stVoiceText').textContent = voiceOn ? `ভয়েস থেকে লেখা চালু (${c.asr_backend === 'groq' ? 'Whisper' : 'Bengali.AI'})` : 'ভয়েস থেকে লেখা বন্ধ, লিখে দিন';
@@ -1054,6 +1224,215 @@ $('feeCountry').addEventListener('change', feeUpdate);
 $('feeAmount').addEventListener('input', feeUpdate);
 document.querySelectorAll('[data-amt]').forEach(b => b.addEventListener('click', () => { $('feeAmount').value = b.dataset.amt; feeUpdate(); }));
 
+/* ---------- Ask about your rights (RAG) ---------- */
+const STAMPS = {
+  fact: ['সরকারি তালিকা', 'OFFICIAL TABLE', 'high'], high: ['সূত্রে মিলেছে', 'SOURCED', 'high'],
+  medium: ['সূত্রে আংশিক', 'PARTLY SOURCED', 'medium'], low: ['ফোনে নিশ্চিত হোন', 'CONFIRM BY PHONE', 'low'],
+  none: ['তথ্যভান্ডারে নেই', 'NOT IN SOURCES', 'none']
+};
+const MODE_TXT = {
+  fact: 'সংখ্যাগুলো সরকারি খরচের তালিকা থেকে সরাসরি নেওয়া।',
+  generated: 'AI উত্তরটি লিখেছে শুধু নিচের সূত্রগুলো থেকে, আর প্রতিটি সংখ্যা সূত্রের সাথে মিলিয়ে দেখা হয়েছে।',
+  extractive: 'নিচের সূত্রগুলোর সবচেয়ে মিল থাকা বাক্যগুলো হুবহু দেখানো হলো।',
+  no_match: 'যাচাই করা তথ্যভান্ডারে মিল পাওয়া যায়নি, তাই অনুমান করা হয়নি।'
+};
+const CONF_TXT = { high: 'মিল জোরালো', medium: 'মিল মাঝারি', low: 'মিল কম, ফোন করে নিশ্চিত হোন', none: '' };
+const PHONE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>';
+const LINK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>';
+const DISC = '(আইনি তথ্য, আইনি পরামর্শ নয়।)';
+let askLast = null;
+const host = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return ''; } };
+
+function askAnswerHtml(text) {
+  const lines = text.replace(DISC, '\n§DISC').split('\n').map(l => l.trim()).filter(Boolean);
+  let html = '', list = [];
+  const flush = () => { if (list.length) { html += `<ul>${list.join('')}</ul>`; list = []; } };
+  const cite = s => esc(s).replace(/\[(\d)\]/g, (m, n) => `<a class="cite" href="#src-${n}" data-n="${n}" aria-label="সূত্র ${bn(n)}">${bn(n)}</a>`);
+  for (const l of lines) {
+    if (l === '§DISC') { flush(); html += `<p class="disc">${DISC}</p>`; }
+    else if (l.startsWith('•')) list.push(`<li>${cite(l.replace(/^•\s*/, ''))}</li>`);
+    else { flush(); html += `<p>${cite(l)}</p>`; }
+  }
+  flush();
+  return html;
+}
+
+function askMarked(h, marks) {
+  let t = esc(h.text);
+  (marks || []).forEach(s => { const e = esc(s); t = t.replace(e, `<mark>${e}</mark>`); });
+  return t;
+}
+
+function askPlain(d) {
+  const src = (d.sources || []).filter(h => h.source).map(h => `[${h.n}] ${h.section}: ${h.source}`).join('\n');
+  return `প্রশ্ন: ${d.question}\n\n${d.answer}${src ? '\n\nসূত্র:\n' + src : ''}\n\n— প্রতিশ্রুতি (Protishruti)`;
+}
+
+function askRender(d) {
+  askLast = d;
+  const slip = $('slip');
+  slip.classList.remove('empty');
+  const key = d.mode === 'fact' ? 'fact' : d.confidence;
+  const [mark, small, cls] = STAMPS[key] || STAMPS.none;
+  const u = d.understood || {};
+  const meta = [u.country && CAPS ? `দেশ: ${CAPS.names_bn[u.country] || (u.country === 'SG' ? 'সিঙ্গাপুর' : u.country)}` : '',
+    u.paid_bdt ? `আপনার দেওয়া টাকা: ${bnMoney(u.paid_bdt)}` : '', CONF_TXT[d.confidence] || ''].filter(Boolean).join(' · ');
+
+  let extra = '';
+  if (d.compare) {
+    const c = d.compare, max = Math.max(c.cap_bdt, c.paid_bdt) || 1;
+    extra += `<div class="feebar" aria-label="সরকারি সীমা আর আপনার দেওয়া টাকার তুলনা">
+      <div class="row"><span>সরকারি সীমা</span><i style="--w:${c.cap_bdt / max * 100}%"></i><b>${bnMoney(c.cap_bdt)} টাকা</b></div>
+      <div class="row paid"><span>আপনি দিয়েছেন</span><i style="--w:${c.paid_bdt / max * 100}%"></i><b>${bnMoney(c.paid_bdt)} টাকা</b></div>
+      ${c.over_bdt ? `<p class="over">সীমার চেয়ে ${bnMoney(c.over_bdt)} টাকা বেশি</p>` : ''}</div>`;
+  }
+  if (d.table) {
+    const max = Math.max(...d.table.map(r => r.cap_bdt));
+    extra += `<div class="captable">${d.table.map(r => `<div><span>${esc(r.country)}<i style="--w:${r.cap_bdt / max * 100}%"></i></span><b>${bnMoney(r.cap_bdt)}</b></div>`).join('')}</div>`;
+  }
+  const actions = (d.actions || []).map(a => a.href.startsWith('tel:')
+    ? `<a class="callbtn" href="${esc(a.href)}">${PHONE_SVG}<span><b>${esc(a.label)}</b><small>${esc(a.note)}</small></span></a>`
+    : `<a class="callbtn web" href="${esc(a.href)}" target="_blank" rel="noopener">${LINK_SVG}<span><b>${esc(a.label)}</b><small>${esc(a.note)}</small></span></a>`).join('');
+  const sources = (d.sources || []).map(h => `<li id="src-${h.n}"><span class="num">${bn(h.n)}</span><div>
+      <b>${esc(h.section)}</b><span class="doc">${esc(h.title)}</span>
+      <p>${askMarked(h, (d.highlights || {})[h.id])}</p>
+      ${h.source ? `<a href="${esc(h.source)}" target="_blank" rel="noopener">মূল সূত্র: ${esc(host(h.source))}</a>` : ''}</div></li>`).join('');
+  const terms = (u.added_terms || []).map(t => `<span class="term">${esc(t)}</span>`).join('') || '—';
+  const rows = (d.sources || []).map(h => `<tr><td>${h.n}</td><td>${esc(h.id)}</td>
+      <td class="n">${h.bm25 ?? 'সরাসরি'}</td><td class="n">${h.cosine ?? '—'}</td><td class="n">${h.coverage ?? '—'}</td><td class="n">${h.score ?? '—'}</td></tr>`).join('');
+  const canSpeak = 'speechSynthesis' in window && speechSynthesis.getVoices().some(v => /^bn/i.test(v.lang));
+
+  slip.innerHTML = `
+    <div class="stamp ${cls}"><b>${mark}</b><small>${small}</small></div>
+    <p class="slip-q">${esc(d.question)}</p>
+    <p class="slip-meta">${esc(meta)}</p>
+    <div class="a-body">${askAnswerHtml(d.answer)}</div>
+    ${extra}
+    <p class="a-mode">${MODE_TXT[d.mode] || ''}${d.compare ? ' বেশি দেওয়ার হিসাবটি আপনার বলা টাকা থেকে।' : ''}${d.note ? ' ' + esc(d.note) : ''}</p>
+    <div class="a-actions">${actions}</div>
+    <div class="a-tools">
+      ${canSpeak ? '<button type="button" id="askSpeak">উত্তরটি শুনুন</button>' : ''}
+      <button type="button" id="askCopy">কপি করুন</button>
+      <a href="https://wa.me/?text=${encodeURIComponent(askPlain(d))}" target="_blank" rel="noopener">পরিবারকে WhatsApp-এ পাঠান</a>
+    </div>
+    ${sources ? `<section class="annex"><h4>যে সূত্র থেকে উত্তর</h4><ol>${sources}</ol></section>` : ''}
+    ${(d.related || []).length ? `<section class="related"><h4>আরও জানতে</h4><div>${d.related.map(q => `<button type="button" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div></section>` : ''}
+    <details class="how"><summary>কীভাবে খুঁজে পাওয়া গেল <span class="en">Retrieval details for reviewers</span></summary><div class="in">
+      <dl>
+        <dt>উত্তরের ধরন</dt><dd>${esc(d.mode)}${d.grounding ? ' · সংখ্যা যাচাই: পাস' : ''}</dd>
+        <dt>যে প্রশ্ন খোঁজা হলো</dt><dd>${esc(d.question)} <span class="en" style="display:inline">(ফোন, পাসপোর্ট, NID নম্বর ঢাকা থাকে)</span></dd>
+        <dt>যোগ করা খোঁজার শব্দ</dt><dd>${terms}</dd>
+        <dt>সময়</dt><dd>${bn(d.ms)} মিলিসেকেন্ড</dd>
+      </dl>
+      ${rows ? `<table><thead><tr><th>#</th><th>অংশ</th><th>BM25</th><th>cosine</th><th>শব্দ মিল</th><th>RRF</th></tr></thead><tbody>${rows}</tbody></table>` : ''}
+    </div></details>`;
+  const st = slip.querySelector('.stamp'); void st.offsetWidth; st.classList.add('go-anim');
+}
+
+$('slip').addEventListener('click', e => {
+  const c = e.target.closest('.cite');
+  if (c) {
+    e.preventDefault();
+    const li = $('src-' + c.dataset.n); if (!li) return;
+    li.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    li.classList.add('flash'); setTimeout(() => li.classList.remove('flash'), 1600);
+    return;
+  }
+  const q = e.target.closest('[data-q]');
+  if (q) { askQuestion(q.dataset.q); return; }
+  if (e.target.id === 'askCopy' && askLast) {
+    navigator.clipboard.writeText(askPlain(askLast)).then(() => { e.target.textContent = 'কপি হয়েছে'; setTimeout(() => e.target.textContent = 'কপি করুন', 1500); });
+  }
+  if (e.target.id === 'askSpeak' && askLast) {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(askLast.answer.replace(/\[\d\]/g, '').replace(DISC, ''));
+    u.lang = 'bn-BD'; u.voice = speechSynthesis.getVoices().find(v => /^bn/i.test(v.lang)) || null; u.rate = .95;
+    speechSynthesis.speak(u);
+  }
+});
+
+async function askQuestion(q) {
+  q = (q ?? $('askQ').value).trim();
+  $('askQ').value = q;
+  if (!q) { $('askStatus').innerHTML = '<span class="err">একটি প্রশ্ন লিখুন বা বলুন।</span>'; $('askQ').focus(); return; }
+  const fd = new FormData(); fd.append('question', q);
+  $('askGo').disabled = true; $('askStatus').textContent = 'যাচাই করা সূত্র খোঁজা হচ্ছে…';
+  try {
+    const res = await fetch('/api/ask', { method: 'POST', body: fd });
+    const raw = await res.text();
+    let d; try { d = JSON.parse(raw); } catch { throw new Error(`সার্ভারে সমস্যা (${res.status})। একটু পরে আবার চেষ্টা করুন।`); }
+    if (!res.ok) throw new Error(typeof d.detail === 'string' ? d.detail : 'প্রশ্নটি পাঠানো যায়নি।');
+    $('askStatus').textContent = '';
+    askRender(d);
+    if ($('slip').getBoundingClientRect().top > innerHeight * .6) $('slip').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (err) { $('askStatus').innerHTML = '<span class="err">' + esc(err.message) + '</span>'; }
+  finally { $('askGo').disabled = false; }
+}
+$('askForm').addEventListener('submit', e => { e.preventDefault(); askQuestion(); });
+
+function askShowTopic(i, topics) {
+  $('askTopics').querySelectorAll('button').forEach((b, j) => b.setAttribute('aria-selected', String(i === j)));
+  $('askChips').innerHTML = topics[i].questions.map(q => `<button type="button" data-q="${esc(q)}">${esc(q)}</button>`).join('');
+}
+$('askChips').addEventListener('click', e => { const b = e.target.closest('[data-q]'); if (b) askQuestion(b.dataset.q); });
+fetch('/api/ask/topics').then(r => r.ok ? r.json() : null).then(d => {
+  if (!d) return;
+  $('askTopics').innerHTML = d.topics.map((t, i) => `<button type="button" role="tab" aria-selected="false" data-i="${i}">${esc(t.label)}</button>`).join('');
+  $('askTopics').addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b) askShowTopic(+b.dataset.i, d.topics); });
+  askShowTopic(0, d.topics);
+  $('kbList').innerHTML = d.topics.map(t => `<li><b>${esc(t.label)}</b><span>${bn(t.sections.length)}টি অংশ · ${bn(t.sources.length)}টি সূত্র: ${esc(t.sources.map(host).join(', '))}</span></li>`).join('');
+}).catch(() => {});
+
+/* Ask by voice: record, transcribe, let them correct, then ask */
+let askRec = null;
+$('askMic').addEventListener('click', async () => {
+  if (askRec && askRec.state === 'recording') { askRec.stop(); return; }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const parts = [];
+    askRec = new MediaRecorder(stream);
+    askRec.ondataavailable = e => e.data.size && parts.push(e.data);
+    askRec.onstop = async () => {
+      stream.getTracks().forEach(t => t.stop());
+      $('askMic').classList.remove('on');
+      const type = askRec.mimeType || 'audio/webm';
+      const fd = new FormData(); fd.append('audio', new File(parts, 'question.' + (type.includes('ogg') ? 'ogg' : type.includes('mp4') ? 'm4a' : 'webm'), { type }));
+      $('askStatus').textContent = 'শুনে লেখা হচ্ছে…';
+      try {
+        const res = await fetch('/api/transcribe', { method: 'POST', body: fd });
+        const d = await res.json();
+        if (!res.ok) throw new Error(d.detail || 'শুনে লেখা যায়নি।');
+        $('askQ').value = d.text; $('askQ').focus();
+        $('askStatus').textContent = 'লেখা হয়েছে। দেখে নিন, ভুল থাকলে ঠিক করুন, তারপর “জিজ্ঞেস করুন” চাপুন।';
+      } catch (err) { $('askStatus').innerHTML = '<span class="err">' + esc(err.message) + '</span>'; }
+    };
+    askRec.start(); $('askMic').classList.add('on');
+    $('askStatus').textContent = 'বলুন… শেষ হলে আবার মাইকে চাপুন।';
+    setTimeout(() => askRec && askRec.state === 'recording' && askRec.stop(), 30000);
+  } catch { $('askStatus').innerHTML = '<span class="err">মাইক্রোফোন চালু করা যায়নি। ব্রাউজারে মাইকের অনুমতি দিন, বা লিখে প্রশ্ন করুন।</span>'; }
+});
+
+/* From a check result: one tap asks about that warning */
+function askForFlag(fl, d) {
+  const p = d.promise || {}, name = CAPS && p.country ? CAPS.names_bn[p.country] : '';
+  const paid = (p.fees_paid || []).reduce((a, f) => a + (f.amount_bdt || 0), 0);
+  return ({
+    R05: name && paid ? `${name} যেতে ${bnMoney(paid)} টাকা দিয়েছি, বেশি হয়েছে?` : 'সরকারি খরচের চেয়ে বেশি টাকা নিলে কী করব?',
+    R06: 'এজেন্সির লাইসেন্স কীভাবে যাচাই করব?', R07: 'চুক্তিপত্র পাওয়া কি আমার অধিকার?',
+    R01: 'ভিসায় লেখা কাজ আর দালালের কথা না মিললে কী করব?', R02: 'ভিসায় লেখা কাজ আর দালালের কথা না মিললে কী করব?',
+    R03: 'নিয়োগকর্তার নাম ভিসা আর চুক্তিতে আলাদা হলে কী করব?', R04: 'দালাল যে বেতন বলেছিল চুক্তিতে তার চেয়ে কম, কী করব?',
+    R08: 'মানবপাচার থেকে কীভাবে সাবধান থাকব?', R10: 'দালাল বেতন বলেছিল বেশি, কিন্তু এখন কম দেয়, কী করব?',
+    R11: 'বিদেশে বেতন থেকে অনেক টাকা কেটে নিলে কোথায় যাব?', R12: 'বিদেশে বেতন না দিলে কোথায় যাব?'
+  })[fl.rule_id] || '';
+}
+$('flags').addEventListener('click', e => {
+  const b = e.target.closest('.askthis'); if (!b) return;
+  $('ask').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  askQuestion(b.dataset.ask);
+});
+
+if ('speechSynthesis' in window) { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => {}; }
+
 const SEV = { critical: 'গুরুতর', warning: 'সতর্কতা', info: 'তথ্য' };
 
 function render(d) {
@@ -1088,6 +1467,9 @@ function render(d) {
       ${(fl.law_bn || fl.action_bn) ? `<div class="law">
         ${fl.law_bn ? `<div><small>আইন কী বলে</small><p>${esc(fl.law_bn)}</p></div>` : ''}
         ${fl.action_bn ? `<div><small>এখন যা করবেন</small><p>${esc(fl.action_bn)}</p></div>` : ''}</div>` : ''}
+      ${(fl.refs && fl.refs.length) ? `<p class="refs">যাচাই করা সূত্র: ${fl.refs.map(r => r.source
+        ? `<a href="${esc(r.source)}" target="_blank" rel="noopener">${esc(r.section)}</a>` : esc(r.section)).join('')}</p>` : ''}
+      ${askForFlag(fl, d) ? `<button type="button" class="askthis" data-ask="${esc(askForFlag(fl, d))}">এ নিয়ে প্রশ্ন করুন</button>` : ''}
     </div></article>`).join('') + (d.flags.length ? `
     <div class="helpstrip"><span>সাহায্য দরকার?</span>
       <a class="call" href="tel:16135">১৬১৩৫ <small>প্রবাসবন্ধু</small></a>

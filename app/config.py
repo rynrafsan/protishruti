@@ -35,6 +35,9 @@ def _flag(name: str, default: bool) -> bool:
 LLM_EXTRACT = _flag("LLM_EXTRACT", LLM_PROVIDER not in ("groq", "openai"))
 LLM_EXPLAIN = _flag("LLM_EXPLAIN", LLM_PROVIDER not in ("groq", "openai"))
 LLM_EXTRACT_VOICE = _flag("LLM_EXTRACT_VOICE", True)  # speech-to-text output needs the AI to read numbers
+# Rights Q&A (RAG): let the AI write the answer from the retrieved passages. Off -> the best
+# matching sentences are shown word for word. Fee questions always use the government table.
+RAG_GENERATE = _flag("RAG_GENERATE", True)
 
 # Speech-to-text (needs requirements-asr.txt and ideally a GPU)
 ASR_ENABLED = _flag("ASR_ENABLED", False)
