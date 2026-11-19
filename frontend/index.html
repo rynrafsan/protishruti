@@ -3,107 +3,740 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Protishruti — promise check (prototype)</title>
+<title>প্রতিশ্রুতি — দালালের কথা কাগজে মিলিয়ে নিন</title>
+<meta name="description" content="Protishruti checks a broker's spoken promise against the visa, contract and payslips, and explains every mismatch in plain Bangla.">
+<meta name="theme-color" content="#0E4B3B">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%230E4B3B'/%3E%3Ccircle cx='32' cy='32' r='24' fill='none' stroke='%23C8A456' stroke-width='3' stroke-dasharray='4 3'/%3E%3Cpath d='M20 33l8 8 16-18' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
 <style>
-  :root { --ink:#1b1b1b; --muted:#5f5f5f; --line:#ddd; --bad:#b3261e; --warn:#8a5a00; --ok:#1e6b3a; --accent:#1f5fbf; }
-  * { box-sizing: border-box; }
-  body { font-family: "Noto Sans Bengali", system-ui, sans-serif; color: var(--ink); margin: 0; background: #fafafa; }
-  main { max-width: 820px; margin: 0 auto; padding: 24px 16px 64px; }
-  h1 { font-size: 26px; margin: 0 0 4px; }
-  .sub { color: var(--muted); margin: 0 0 16px; }
-  .banner { background: #fff4e5; border: 1px solid #f0c27a; padding: 10px 12px; border-radius: 8px; font-size: 14px; }
-  section { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin-top: 16px; }
-  label { display: block; font-weight: 600; margin: 10px 0 4px; }
-  textarea, input[type=file] { width: 100%; }
-  textarea { min-height: 90px; padding: 8px; font: inherit; border: 1px solid var(--line); border-radius: 6px; }
-  button { background: var(--accent); color: #fff; border: 0; border-radius: 8px; padding: 10px 18px; font: inherit; font-weight: 600; cursor: pointer; margin-top: 14px; }
-  button:disabled { opacity: .5; cursor: wait; }
-  .flag { border-left: 4px solid var(--line); padding: 8px 12px; margin: 10px 0; background: #fcfcfc; border-radius: 0 8px 8px 0; }
-  .critical { border-color: var(--bad); } .warning { border-color: var(--warn); } .info { border-color: var(--accent); }
-  .tag { font-size: 12px; font-weight: 700; text-transform: uppercase; }
-  .critical .tag { color: var(--bad); } .warning .tag { color: var(--warn); } .info .tag { color: var(--accent); }
-  .muted { color: var(--muted); font-size: 14px; }
-  pre { white-space: pre-wrap; background: #f6f6f6; padding: 12px; border-radius: 8px; font: inherit; }
-  .err { color: var(--bad); font-weight: 600; }
-  button.secondary { background: #fff; color: inherit; border: 1px solid #bbb; margin: 8px 0; padding: 8px 12px; }
+:root {
+  --green-900: #0A3A2E;
+  --green: #0E4B3B;
+  --green-600: #1B6B53;
+  --paper: #EAF0EC;
+  --sheet: #F8FAF7;
+  --ink: #1F2D28;
+  --muted: #586A63;
+  --line: #CAD6CF;
+  --gold: #C8A456;
+  --gold-soft: #E9D9AE;
+  --red: #C0262D;
+  --violet: #5D3A9B;
+  --display: 'Tiro Bangla', 'Noto Serif Bengali', Georgia, serif;
+  --body: 'Hind Siliguri', 'Noto Sans Bengali', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+  --guilloche: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='48' viewBox='0 0 160 48'%3E%3Cg fill='none' stroke='%231B6B53' stroke-opacity='.10' stroke-width='1'%3E%3Cpath d='M0 24 C20 4 40 4 60 24 S100 44 120 24 S150 4 160 24'/%3E%3Cpath d='M0 24 C20 44 40 44 60 24 S100 4 120 24 S150 44 160 24'/%3E%3Cpath d='M0 12 C20 -4 40 28 80 12 S140 -4 160 12'/%3E%3Cpath d='M0 36 C20 52 40 20 80 36 S140 52 160 36'/%3E%3C/g%3E%3C/svg%3E");
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 17px/1.65 var(--body); -webkit-font-smoothing: antialiased; }
+img, svg { display: block; }
+a { color: var(--green-600); }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+.en { display: block; color: var(--muted); font-size: .86em; line-height: 1.5; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- Hero ---------- */
+.hero { background: var(--green); color: #fff; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: var(--guilloche); opacity: .5; filter: invert(1); mix-blend-mode: soft-light; }
+.topbar { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 20px; }
+.brand { display: flex; align-items: center; gap: 12px; color: #fff; text-decoration: none; }
+.brand svg { width: 44px; height: 44px; }
+.brand b { font: 400 26px/1 var(--display); display: block; }
+.brand small { color: #BFD6CB; font-size: 13px; letter-spacing: .02em; }
+.topbar nav { display: flex; gap: 22px; }
+.topbar nav a { color: #DCEAE3; text-decoration: none; font-weight: 500; font-size: 15px; }
+.topbar nav a:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
+.hero-grid { position: relative; display: grid; grid-template-columns: 1.05fr .95fr; gap: 40px; align-items: center; padding: 56px 0 84px; }
+.hero h1 { font: 400 clamp(40px, 6vw, 68px)/1.18 var(--display); margin: 0 0 18px; }
+.hero .lede { font-size: 19px; color: #E4EFE9; max-width: 34em; margin: 0 0 8px; }
+.hero .lede-en { color: #A9C6B9; font-size: 16px; max-width: 36em; margin: 0 0 28px; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn { display: inline-flex; align-items: center; gap: 10px; font: 600 17px/1.2 var(--body); border-radius: 4px; padding: 14px 22px; text-decoration: none; cursor: pointer; border: 2px solid transparent; }
+.btn-gold { background: var(--gold); color: var(--green-900); }
+.btn-gold:hover { background: #D6B66B; }
+.btn-line { border-color: rgba(255,255,255,.55); color: #fff; background: transparent; }
+.btn-line:hover { border-color: #fff; background: rgba(255,255,255,.06); }
+
+/* Hero specimen: promise note + visa page + stamp */
+.specimen { position: relative; height: 392px; }
+.note-card { position: absolute; left: 0; top: 0; width: 66%; background: #FFFDF5; color: var(--ink); padding: 18px 20px 22px; transform: rotate(-4deg); box-shadow: 0 14px 30px rgba(0,0,0,.28); }
+.note-card .who { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+.wave { display: flex; align-items: center; gap: 3px; height: 26px; margin: 6px 0 10px; }
+.wave i { width: 3px; background: var(--green-600); border-radius: 2px; }
+.note-card p { margin: 0; font: italic 400 19px/1.5 var(--display); }
+.visa { position: absolute; right: 0; bottom: 10px; width: 80%; background: var(--sheet) var(--guilloche); color: var(--ink); border: 1px solid #B9CBC1; padding: 16px 18px 12px; transform: rotate(2.5deg); box-shadow: 0 18px 40px rgba(0,0,0,.32); }
+.visa header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--line); padding-bottom: 6px; margin-bottom: 8px; }
+.visa header b { font-weight: 700; letter-spacing: .08em; font-size: 14px; color: var(--green); }
+.visa header span { font-size: 12px; color: var(--red); font-weight: 700; letter-spacing: .1em; }
+.visa dl { display: grid; grid-template-columns: auto 1fr; gap: 3px 14px; margin: 0 0 10px; font-size: 14px; }
+.visa dt { color: var(--muted); }
+.visa dd { margin: 0; font-weight: 600; }
+.visa dd.bad { color: var(--red); text-decoration: underline wavy rgba(192,38,45,.5); text-underline-offset: 3px; }
+.visa .mrz { font: 500 11.5px/1.45 var(--mono); color: #3E5149; letter-spacing: .06em; white-space: nowrap; overflow: hidden; }
+.stamp { position: absolute; color: var(--red); border: 4px double currentColor; border-radius: 6px; padding: 4px 14px 2px; text-align: center; transform: rotate(-14deg); font-weight: 700; line-height: 1.05; mix-blend-mode: multiply; opacity: .9;
+  -webkit-mask-image: radial-gradient(circle at 30% 40%, #000 60%, rgba(0,0,0,.65) 61%, #000 75%); mask-image: radial-gradient(circle at 30% 40%, #000 60%, rgba(0,0,0,.65) 61%, #000 75%); }
+.stamp b { display: block; font: 400 34px/1.1 var(--display); }
+.stamp small { font-size: 12px; letter-spacing: .28em; }
+.visa .stamp { right: 22px; top: 44px; }
+.visa .stamp b { font-size: 42px; }
+@keyframes thunk { 0% { transform: rotate(-14deg) scale(1.9); opacity: 0; } 60% { transform: rotate(-14deg) scale(.94); opacity: .95; } 100% { transform: rotate(-14deg) scale(1); opacity: .9; } }
+.visa .stamp { animation: thunk .5s cubic-bezier(.2,.9,.3,1.2) .6s both; }
+.hero-mrz { position: relative; border-top: 1px solid rgba(255,255,255,.14); padding: 12px 0; font: 500 13px/1.5 var(--mono); color: rgba(233,217,174,.55); letter-spacing: .14em; white-space: nowrap; overflow: hidden; }
+
+/* ---------- Notice ---------- */
+.notice { background: #FFF; border-bottom: 1px solid var(--line); }
+.notice p { margin: 0; padding: 12px 0; font-size: 15px; display: flex; gap: 12px; align-items: baseline; }
+.notice strong { color: var(--red); white-space: nowrap; }
+
+/* ---------- Journey ---------- */
+.journey { padding: 72px 0 24px; }
+.section-head h2 { font: 400 clamp(28px, 3.4vw, 38px)/1.25 var(--display); margin: 0; color: var(--green-900); }
+.section-head p { margin: 6px 0 0; color: var(--muted); max-width: 40em; }
+.route { list-style: none; margin: 36px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; position: relative; }
+.route::before { content: ''; position: absolute; top: 27px; left: 28px; right: 28px; border-top: 2px dashed var(--gold); }
+.route li { position: relative; }
+.route .node { width: 56px; height: 56px; border-radius: 50%; background: var(--green); color: #fff; display: grid; place-items: center; font: 400 24px/1 var(--display); border: 4px solid var(--paper); box-shadow: 0 0 0 2px var(--gold); position: relative; }
+.route h3 { font: 400 26px/1.2 var(--display); margin: 14px 0 0; color: var(--green-900); }
+.route .when { font-weight: 600; margin: 2px 0 10px; }
+.route .rules { list-style: none; margin: 0; padding: 0; font-size: 15px; }
+.route .rules li { display: flex; gap: 10px; padding: 5px 0; border-top: 1px solid var(--line); }
+.route .rules code { font: 500 12px/2 var(--mono); color: var(--green-600); min-width: 30px; }
+
+/* ---------- Checker ---------- */
+.checker { padding: 56px 0 72px; }
+.desk { display: grid; grid-template-columns: 1fr 300px; gap: 28px; align-items: start; margin-top: 28px; }
+.sheet { background: var(--sheet); border: 1px solid var(--line); box-shadow: 0 1px 0 #fff inset, 0 10px 30px rgba(14,75,59,.08); }
+form.sheet { padding: 8px 32px 28px; }
+.step { display: grid; grid-template-columns: 44px 1fr; gap: 18px; padding: 26px 0; border-bottom: 1px solid var(--line); }
+.step:last-of-type { border-bottom: 0; }
+.step .num { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--green); color: var(--green); display: grid; place-items: center; font: 400 21px/1 var(--display); }
+.step h3 { font: 400 23px/1.3 var(--display); margin: 4px 0 2px; color: var(--green-900); }
+.step .help { margin: 0 0 14px; color: var(--muted); font-size: 15px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.tool { display: inline-flex; align-items: center; gap: 8px; font: 600 15px/1 var(--body); padding: 11px 16px; border-radius: 4px; border: 1.5px solid var(--green); background: #fff; color: var(--green); cursor: pointer; }
+.tool:hover:not(:disabled) { background: #EEF5F1; }
+.tool:disabled { opacity: .45; cursor: not-allowed; }
+.tool.rec { border-color: var(--red); color: var(--red); }
+.tool.rec.on { background: var(--red); color: #fff; }
+.tool .dot { width: 10px; height: 10px; border-radius: 50%; background: currentColor; }
+.tool.rec.on .dot { animation: pulse 1s infinite; }
+@keyframes pulse { 50% { opacity: .25; } }
+.tool.primary { background: var(--green); color: #fff; }
+.tool.primary:hover:not(:disabled) { background: var(--green-600); }
+.file-hidden { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.audio-chip { display: none; align-items: center; gap: 10px; margin-top: 12px; background: #fff; border: 1px solid var(--line); padding: 8px 10px; }
+.audio-chip.show { display: flex; flex-wrap: wrap; }
+.audio-chip audio { height: 34px; max-width: 100%; }
+.audio-chip .name { font-size: 14px; color: var(--muted); }
+.x { border: 0; background: none; color: var(--muted); font-size: 20px; line-height: 1; cursor: pointer; padding: 2px 6px; }
+.x:hover { color: var(--red); }
+.voice-off { margin: 10px 0 0; font-size: 14px; color: var(--muted); }
+label.field { display: block; font-weight: 600; margin: 18px 0 6px; }
+label.field span { font-weight: 400; color: var(--muted); font-size: 14px; }
+textarea { width: 100%; min-height: 120px; resize: vertical; font: 18px/1.6 var(--body); color: var(--ink); background: #fff; border: 1.5px solid var(--line); border-radius: 4px; padding: 12px 14px; }
+textarea:focus { border-color: var(--green-600); outline: none; box-shadow: 0 0 0 3px rgba(27,107,83,.18); }
+.examples { margin-top: 10px; font-size: 14px; color: var(--muted); }
+.examples button { font: 500 14px/1 var(--body); border: 1px dashed var(--green-600); background: transparent; color: var(--green-600); padding: 7px 11px; border-radius: 99px; margin: 4px 6px 0 0; cursor: pointer; }
+.examples button:hover { background: #E3EEE8; border-style: solid; }
+.drop { display: block; border: 2px dashed #A9BDB3; background: #fff var(--guilloche); padding: 22px; text-align: center; cursor: pointer; transition: border-color .15s, background-color .15s; }
+.drop:hover, .drop.over { border-color: var(--green-600); background-color: #F1F7F3; }
+.drop b { display: block; color: var(--green); font-weight: 600; }
+.drop small { color: var(--muted); }
+.chips { list-style: none; padding: 0; margin: 10px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.chips li { display: flex; align-items: center; gap: 6px; background: #E3EEE8; padding: 4px 4px 4px 12px; font-size: 14px; max-width: 100%; }
+.chips li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 240px; }
+.submit { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; padding-top: 24px; border-top: 2px solid var(--green); }
+.go { font: 600 20px/1.2 var(--body); background: var(--green); color: #fff; border: 0; border-radius: 4px; padding: 16px 34px; cursor: pointer; }
+.go small { display: block; font-weight: 400; font-size: 13px; color: #BFD6CB; }
+.go:hover:not(:disabled) { background: var(--green-600); }
+.go:disabled { opacity: .6; cursor: progress; }
+#status { margin: 0; font-size: 15px; color: var(--muted); flex: 1; min-width: 220px; }
+#status .err { color: var(--red); font-weight: 600; }
+
+/* Working panel */
+.working { display: none; margin-top: 18px; padding: 18px; background: #fff; border: 1px solid var(--line); align-items: center; gap: 18px; }
+.working.show { display: flex; }
+.scan { width: 54px; height: 68px; border: 1.5px solid var(--green-600); background: repeating-linear-gradient(#fff 0 9px, #D7E4DC 9px 10px); position: relative; overflow: hidden; flex: none; }
+.scan::after { content: ''; position: absolute; left: 0; right: 0; height: 3px; background: var(--gold); box-shadow: 0 0 8px var(--gold); animation: scan 1.4s ease-in-out infinite alternate; }
+@keyframes scan { from { top: 4px; } to { top: 60px; } }
+.working b { display: block; font: 400 20px/1.3 var(--display); color: var(--green-900); }
+.working span { font-size: 14px; color: var(--muted); }
+
+/* Side panel */
+aside.side { position: sticky; top: 20px; display: grid; gap: 16px; }
+.side .box { background: var(--green-900); color: #E3EEE8; padding: 20px; }
+.side .box h3 { font: 400 20px/1.3 var(--display); margin: 0 0 10px; color: #fff; }
+.side .box p { margin: 0; font-size: 15px; }
+.side .box q { display: block; font: italic 400 22px/1.35 var(--display); color: var(--gold-soft); margin-bottom: 8px; quotes: none; }
+.status-list { list-style: none; margin: 0; padding: 0; font-size: 14px; }
+.status-list li { display: flex; gap: 10px; padding: 8px 0; border-top: 1px solid rgba(255,255,255,.12); }
+.status-list li:first-child { border-top: 0; }
+.status-list i { width: 10px; height: 10px; border-radius: 50%; margin-top: 7px; flex: none; background: #7B8C85; }
+.status-list i.on { background: #5FD39E; box-shadow: 0 0 0 3px rgba(95,211,158,.18); }
+
+/* ---------- Results ---------- */
+#out { margin-top: 32px; scroll-margin-top: 16px; }
+.verdict { position: relative; padding: 28px 32px 26px; border-bottom: 1px solid var(--line); overflow: hidden; }
+.verdict h2 { font: 400 clamp(26px, 3.2vw, 36px)/1.25 var(--display); margin: 0; padding-right: 170px; }
+.verdict p { margin: 6px 0 0; color: var(--muted); padding-right: 170px; }
+.verdict .counts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.count { font-size: 14px; font-weight: 600; padding: 4px 12px; border: 1.5px solid currentColor; border-radius: 99px; }
+.count.critical { color: var(--red); } .count.warning { color: var(--violet); } .count.info { color: var(--green-600); }
+.verdict .stamp { right: 30px; top: 22px; }
+.verdict .stamp.warn { color: var(--violet); }
+.verdict .stamp.clear { color: var(--green-600); }
+.verdict .stamp.go-anim { animation: thunk .45s cubic-bezier(.2,.9,.3,1.2) both; }
+.res-body { padding: 8px 32px 30px; }
+.res-body h3 { font: 400 21px/1.3 var(--display); color: var(--green-900); margin: 26px 0 10px; }
+.flag { display: grid; grid-template-columns: 6px 1fr; background: #fff; border: 1px solid var(--line); margin: 12px 0; }
+.flag::before { content: ''; background: var(--line); }
+.flag.critical::before { background: var(--red); } .flag.warning::before { background: var(--violet); } .flag.info::before { background: var(--green-600); }
+.flag-in { padding: 14px 18px; }
+.flag-top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.flag-top b { font-size: 18px; }
+.sev { font-size: 13px; font-weight: 700; white-space: nowrap; }
+.critical .sev { color: var(--red); } .warning .sev { color: var(--violet); } .info .sev { color: var(--green-600); }
+.sev code { font: 500 12px var(--mono); color: var(--muted); margin-left: 6px; }
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 12px; border: 1px solid var(--line); }
+.compare div { padding: 10px 12px; }
+.compare div + div { border-left: 1px dashed var(--line); background: #FBF6F6; }
+.warning .compare div + div { background: #F7F4FB; }
+.compare small { display: block; color: var(--muted); font-size: 12.5px; }
+.compare strong { font-weight: 600; }
+.src { margin: 10px 0 0; font-size: 13.5px; color: var(--muted); }
+.heard { margin: 0; padding: 12px 16px; background: #fff; border-left: 3px solid var(--gold); font: italic 400 18px/1.6 var(--display); }
+.letter { margin: 0; white-space: pre-wrap; font: 17px/1.75 var(--body); background: #fff; border: 1px solid var(--line); padding: 16px 18px; }
+.unchecked { list-style: none; padding: 0; margin: 0; }
+.unchecked li { display: flex; gap: 12px; padding: 7px 0; }
+.unchecked li::before { content: ''; width: 18px; height: 18px; border: 2px dashed var(--muted); border-radius: 3px; flex: none; margin-top: 4px; }
+.receipt { margin: 28px 0 0; background: #fff var(--guilloche); border: 1px solid var(--line); padding: 20px 22px; position: relative; }
+.receipt::before { content: ''; position: absolute; left: 0; right: 0; top: -7px; height: 12px; background: radial-gradient(circle at 7px 0, var(--sheet) 6px, transparent 6.5px) 0 0 / 14px 12px repeat-x; }
+.receipt h4 { font: 400 20px/1.3 var(--display); margin: 0; color: var(--green-900); }
+.receipt .rid { font: 500 14px var(--mono); color: var(--green-600); }
+.receipt code { display: block; font: 500 12.5px/1.5 var(--mono); word-break: break-all; color: var(--muted); margin: 8px 0 14px; }
+.receipt .row a { text-decoration: none; }
+
+/* ---------- WhatsApp ---------- */
+.wa { background: var(--green-900); color: #E3EEE8; padding: 80px 0; position: relative; overflow: hidden; }
+.wa::before { content: ''; position: absolute; inset: 0; background: var(--guilloche); filter: invert(1); opacity: .25; }
+.wa-grid { position: relative; display: grid; grid-template-columns: 360px 1fr; gap: 64px; align-items: center; }
+.phone { width: 330px; margin: 0 auto; background: #0B1712; border-radius: 38px; padding: 12px; box-shadow: 0 30px 60px rgba(0,0,0,.45), inset 0 0 0 2px #2A3A33; }
+.screen { border-radius: 28px; overflow: hidden; background: #ECE5DD; }
+.chat-head { background: #0F5E49; color: #fff; padding: 14px 16px; display: flex; align-items: center; gap: 10px; }
+.chat-head .av { width: 36px; height: 36px; border-radius: 50%; background: var(--gold); display: grid; place-items: center; color: var(--green-900); font: 400 18px var(--display); }
+.chat-head b { display: block; font-size: 15px; line-height: 1.2; }
+.chat-head small { font-size: 12px; color: #BFE0D3; }
+.chat { padding: 12px 10px 14px; display: flex; flex-direction: column; gap: 7px; min-height: 470px; font-size: 13.5px; line-height: 1.45; color: #1C2622; }
+.msg { max-width: 82%; padding: 7px 10px 5px; border-radius: 8px; box-shadow: 0 1px 1px rgba(0,0,0,.12); position: relative; }
+.msg.me { align-self: flex-end; background: #D9FDD3; border-top-right-radius: 2px; }
+.msg.bot { align-self: flex-start; background: #fff; border-top-left-radius: 2px; }
+.msg time { display: block; text-align: right; font-size: 10.5px; color: #6E7B76; margin-top: 2px; }
+.msg .vn { display: flex; align-items: center; gap: 8px; min-width: 190px; }
+.msg .vn .play { width: 0; height: 0; border-left: 11px solid #4A5853; border-top: 7px solid transparent; border-bottom: 7px solid transparent; }
+.msg .vn .bars { display: flex; gap: 2px; align-items: center; height: 22px; flex: 1; }
+.msg .vn .bars i { width: 2.5px; background: #8FA59C; border-radius: 2px; }
+.msg .photo { width: 190px; height: 112px; background: var(--sheet) var(--guilloche); border: 1px solid #C8D6CE; display: grid; place-items: center; font: 600 11px/1.3 var(--body); color: var(--red); letter-spacing: .2em; margin-bottom: 4px; }
+.msg .flagline { color: var(--red); font-weight: 600; }
+.wa h2 { font: 400 clamp(30px, 3.6vw, 42px)/1.2 var(--display); color: #fff; margin: 0 0 10px; }
+.wa .lede { font-size: 18px; margin: 0 0 6px; max-width: 32em; }
+.wa .lede-en { color: #A9C6B9; margin: 0 0 26px; max-width: 34em; font-size: 15.5px; }
+.wa ol { list-style: none; counter-reset: s; margin: 0 0 28px; padding: 0; display: grid; gap: 14px; }
+.wa ol li { counter-increment: s; display: grid; grid-template-columns: 36px 1fr; gap: 14px; align-items: start; }
+.wa ol li::before { content: counter(s, bengali); width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid var(--gold); color: var(--gold); display: grid; place-items: center; font: 400 17px/1 var(--display); }
+.wa ol b { color: #fff; font-weight: 600; display: block; }
+.wa ol span { color: #A9C6B9; font-size: 14.5px; }
+.wa kbd { font: 600 14px var(--body); background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.25); padding: 1px 8px; border-radius: 4px; color: #fff; }
+.wa-cta { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+.wa-num { font: 500 18px var(--mono); color: var(--gold-soft); letter-spacing: .04em; }
+.pilot { border: 1px dashed rgba(233,217,174,.5); padding: 12px 16px; font-size: 15px; color: #DCE7E1; max-width: 34em; }
+
+/* ---------- Safety + footer ---------- */
+.safety { padding: 72px 0; }
+.safety-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 48px; margin-top: 26px; }
+.safety-grid div { padding: 18px 0; border-top: 1px solid var(--line); }
+.safety-grid b { display: block; font: 400 20px/1.35 var(--display); color: var(--green-900); margin-bottom: 4px; }
+.safety-grid p { margin: 0; font-size: 15.5px; }
+footer { background: #fff; border-top: 1px solid var(--line); padding: 28px 0 36px; font-size: 14.5px; color: var(--muted); }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 18px; }
+footer p { margin: 0; }
+footer .chain { display: inline-flex; gap: 8px; align-items: center; }
+footer .chain i { width: 9px; height: 9px; border-radius: 50%; background: #9AA8A2; }
+footer .chain i.on { background: #2E9E6B; }
+
+/* ---------- Responsive + motion ---------- */
+@media (max-width: 960px) {
+  .hero-grid { grid-template-columns: 1fr; padding: 36px 0 56px; }
+  .specimen { height: 330px; max-width: 520px; }
+  .desk { grid-template-columns: 1fr; }
+  aside.side { position: static; grid-template-columns: 1fr 1fr; }
+  .wa-grid { grid-template-columns: 1fr; gap: 40px; }
+  .wa-grid .phone { order: 2; }
+}
+@media (max-width: 680px) {
+  body { font-size: 16px; }
+  .wrap { padding: 0 16px; }
+  .topbar nav { display: none; }
+  .route { grid-template-columns: 1fr; gap: 30px; }
+  .route::before { top: 28px; bottom: 28px; left: 27px; right: auto; border-top: 0; border-left: 2px dashed var(--gold); }
+  .route li { padding-left: 76px; }
+  .route .node { position: absolute; left: 0; top: 0; }
+  .route h3 { margin-top: 6px; }
+  form.sheet { padding: 4px 16px 20px; }
+  .step { grid-template-columns: 1fr; gap: 8px; }
+  aside.side { grid-template-columns: 1fr; }
+  .verdict, .res-body { padding-left: 16px; padding-right: 16px; }
+  .verdict h2, .verdict p { padding-right: 0; }
+  .verdict .stamp { position: static; display: inline-block; margin-top: 14px; transform: rotate(-6deg); }
+  .compare { grid-template-columns: 1fr; }
+  .compare div + div { border-left: 0; border-top: 1px dashed var(--line); }
+  .safety-grid { grid-template-columns: 1fr; }
+  .phone { width: 300px; }
+  .specimen { height: 372px; }
+  .note-card { width: 82%; }
+  .visa { width: 92%; }
+  .visa .stamp { top: auto; bottom: 44px; right: 12px; }
+  .visa .stamp b { font-size: 30px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
 </style>
 </head>
 <body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="topbar">
+      <a class="brand" href="#top" aria-label="প্রতিশ্রুতি, হোম">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#0A3A2E"/><circle cx="32" cy="32" r="24.5" fill="none" stroke="#C8A456" stroke-width="2.5" stroke-dasharray="4 3"/><path d="M20 33l8 8 16-18" fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span><b>প্রতিশ্রুতি</b><small>Protishruti</small></span>
+      </a>
+      <nav aria-label="Sections">
+        <a href="#check">যাচাই করুন</a>
+        <a href="#journey">কখন কাজে লাগে</a>
+        <a href="#whatsapp">WhatsApp</a>
+        <a href="#safety">নিরাপত্তা</a>
+      </nav>
+    </div>
+
+    <div class="hero-grid" id="top">
+      <div>
+        <h1>মুখের কথা<br>কাগজে মিলিয়ে নিন</h1>
+        <p class="lede">দালাল যা বলেছে, ভিসা আর চুক্তিতেও কি তা-ই লেখা আছে? টাকা দেওয়ার আগে, বিমানে ওঠার আগে আর বিদেশে পৌঁছানোর পরে মিলিয়ে দেখুন।</p>
+        <p class="lede-en">Protishruti compares a broker's spoken promise with the visa, contract and payslips, and explains every mismatch in plain Bangla.</p>
+        <div class="cta">
+          <a class="btn btn-gold" href="#check">এখনই যাচাই করুন</a>
+          <a class="btn btn-line" href="#whatsapp">WhatsApp-এ পাঠান</a>
+        </div>
+      </div>
+
+      <div class="specimen" aria-hidden="true">
+        <div class="note-card">
+          <div class="who">দালালের ভয়েস নোট · ০:১৪</div>
+          <div class="wave" id="heroWave"></div>
+          <p>“সৌদিতে ফ্যাক্টরির কাজ, বেতন ৩৫ হাজার টাকা। কাগজ পরে দিব।”</p>
+        </div>
+        <div class="visa">
+          <header><b>VISA</b><span>SPECIMEN</span></header>
+          <dl>
+            <dt>Profession</dt><dd class="bad">House driver</dd>
+            <dt>Employer</dt><dd>Al Noor Est.</dd>
+            <dt>Country</dt><dd>Saudi Arabia</dd>
+          </dl>
+          <div class="mrz">V&lt;SAUSPECIMEN&lt;&lt;WORKER&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br>X0000000&lt;0BGD0001014M2712311&lt;&lt;&lt;&lt;&lt;&lt;</div>
+          <div class="stamp"><b>অমিল</b><small>MISMATCH</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-mrz" aria-hidden="true"><div class="wrap">P&lt;BGDPROTISHRUTI&lt;&lt;PROMISE&lt;CHECK&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div></div>
+</header>
+
+<div class="notice">
+  <div class="wrap"><p><strong>প্রোটোটাইপ</strong><span>শুধু নমুনা (SPECIMEN) কাগজ ব্যবহার করুন, আসল পাসপোর্ট বা ব্যক্তিগত তথ্য দেবেন না। এটি আইনি তথ্য, আইনি পরামর্শ নয়। <span class="en" style="display:inline">Use synthetic documents only. Legal information, not legal advice.</span></span></p></div>
+</div>
+
 <main>
-  <h1>প্রতিশ্রুতি · Protishruti</h1>
-  <p class="sub">দালালের প্রতিশ্রুতি আর কাগজপত্র মিলিয়ে দেখুন। Check broker promises against the documents.</p>
-  <p class="banner"><b>Prototype.</b> Use SYNTHETIC / SPECIMEN documents only. Do not upload real passports or real personal data. Legal information, not legal advice.</p>
+  <section class="journey" id="journey">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>যাত্রার তিনটি জায়গায় পাশে থাকে</h2>
+        <p>১২টি নিয়ম প্রতিশ্রুতি, কাগজ আর সরকারি তালিকা মিলিয়ে দেখে। Twelve rules check the promise against the papers and official lists, at three points on the way abroad.</p>
+      </div>
+      <ol class="route">
+        <li>
+          <div class="node">১</div>
+          <h3>যাচাই</h3>
+          <p class="when">টাকা দেওয়ার আগে <span class="en">Before you pay</span></p>
+          <ul class="rules">
+            <li><code>R05</code>সরকার-নির্ধারিত সীমার বেশি খরচ</li>
+            <li><code>R06</code>এজেন্সির লাইসেন্স নেই বা সক্রিয় নয়</li>
+            <li><code>R07</code>লিখিত চুক্তিপত্র নেই</li>
+            <li><code>R08</code>প্রতারণার খবর বেশি এমন দেশ</li>
+          </ul>
+        </li>
+        <li>
+          <div class="node">২</div>
+          <h3>মিলাও</h3>
+          <p class="when">বিমানে ওঠার আগে <span class="en">Before you fly</span></p>
+          <ul class="rules">
+            <li><code>R01</code>কাগজের কাজ আর প্রতিশ্রুত কাজ আলাদা</li>
+            <li><code>R02</code>গৃহকর্মীর ভিসা, কিন্তু কোম্পানির চাকরির কথা</li>
+            <li><code>R03</code>নিয়োগকর্তার নাম মেলে না</li>
+            <li><code>R04</code>কাগজে বেতন কম</li>
+            <li><code>R09</code>ভিসার মেয়াদ শেষ বা শিগগির শেষ হবে</li>
+          </ul>
+        </li>
+        <li>
+          <div class="node">৩</div>
+          <h3>রক্ষা</h3>
+          <p class="when">বিদেশে পৌঁছানোর পরে <span class="en">After you land</span></p>
+          <ul class="rules">
+            <li><code>R10</code>চুক্তির চেয়ে কম বেতন</li>
+            <li><code>R11</code>বেতন থেকে বড় অঙ্ক কাটা</li>
+            <li><code>R12</code>৩০ দিনের বেশি দেরিতে বেতন</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+  </section>
 
-  <form id="f">
-    <section>
-      <h2>১. দালাল কী বলেছে? What was promised?</h2>
-      <label for="audio">Voice note (optional; needs ASR enabled on the server)</label>
-      <input id="audio" name="audio" type="file" accept="audio/*">
-      <button id="tx" type="button" class="secondary">শুনে লিখুন · Transcribe voice note</button>
-      <label for="transcript">Or type / paste what the broker said <span class="muted">(after transcribing: read it and fix any wrong words or numbers)</span></label>
-      <textarea id="transcript" name="transcript" placeholder="উদাহরণ: সৌদিতে ফ্যাক্টরির কাজ, বেতন ৩৫ হাজার টাকা। আমি মোট ৪ লাখ টাকা দিয়েছি। লাইসেন্স RL-9001।"></textarea>
-    </section>
-    <section>
-      <h2>২. কাগজপত্র · Documents</h2>
-      <label for="documents">Visa, contract, demand letter (images, or .json for synthetic test cases)</label>
-      <input id="documents" name="documents" type="file" multiple accept="image/*,.json,application/pdf">
-      <label for="payslips">Payslips / salary SMS screenshots (after arrival, optional)</label>
-      <input id="payslips" name="payslips" type="file" multiple accept="image/*,.json">
-    </section>
-    <button id="go" type="submit">যাচাই করুন · Check</button>
-    <p id="status" class="muted" role="status"></p>
-  </form>
+  <section class="checker" id="check">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>প্রতিশ্রুতি যাচাই করুন</h2>
+        <p>দালালের কথা দিন, কাগজের ছবি দিন, তারপর যাচাই চাপুন। Give the promise, add photos of the papers, then press Check.</p>
+      </div>
 
-  <section id="out" hidden>
-    <h2>ফলাফল · Result</h2>
-    <p id="heard" class="muted"></p>
-    <div id="flags"></div>
-    <h3>ব্যাখ্যা · Explanation</h3>
-    <pre id="explain"></pre>
-    <h3>যা যাচাই করা হয়নি · Not checked</h3>
-    <ul id="notchecked"></ul>
-    <p id="record" class="muted"></p>
+      <div class="desk">
+        <div>
+          <form id="f" class="sheet" novalidate>
+            <div class="step">
+              <div class="num" aria-hidden="true">১</div>
+              <div>
+                <h3>দালাল কী বলেছে?</h3>
+                <p class="help">ভয়েস নোট রেকর্ড করুন বা ফাইল দিন, তারপর “শুনে লিখুন” চাপুন। অথবা নিচে লিখে দিন। <span class="en">Record or upload the broker's voice note and transcribe it, or type the promise below.</span></p>
+                <div class="row" id="voiceTools">
+                  <button type="button" class="tool rec" id="recBtn"><span class="dot"></span><span id="recLabel">রেকর্ড করুন</span></button>
+                  <label class="tool" for="audio">ভয়েস নোট ফাইল দিন</label>
+                  <input id="audio" class="file-hidden" name="audio" type="file" accept="audio/*">
+                  <button type="button" class="tool primary" id="tx" disabled>শুনে লিখুন</button>
+                </div>
+                <div class="audio-chip" id="audioChip">
+                  <audio id="audioPreview" controls preload="metadata"></audio>
+                  <span class="name" id="audioName"></span>
+                  <button type="button" class="x" id="audioClear" aria-label="ভয়েস নোট সরান">×</button>
+                </div>
+                <p class="voice-off" id="voiceOff" hidden>এই সার্ভারে ভয়েস চালু নেই, তাই কথাগুলো লিখে দিন। <span class="en" style="display:inline">Voice is off on this server; type the promise instead.</span></p>
+
+                <label class="field" for="transcript">দালালের কথা <span>লেখা থাকলে সেটাই ব্যবহার হবে। ভয়েস থেকে এলে ভুল শব্দ বা সংখ্যা ঠিক করে নিন।</span></label>
+                <textarea id="transcript" name="transcript" placeholder="যেমন: সৌদিতে ফ্যাক্টরির কাজ, বেতন ৩৫ হাজার টাকা। আমি মোট ৪ লাখ টাকা দিয়েছি। লাইসেন্স RL-9001।"></textarea>
+                <div class="examples">নমুনা দিয়ে দেখুন:
+                  <button type="button" data-ex="sa">সৌদি আরব</button>
+                  <button type="button" data-ex="qa">কাতার</button>
+                  <button type="button" data-ex="my">মালয়েশিয়া</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="num" aria-hidden="true">২</div>
+              <div>
+                <h3>কাগজপত্র</h3>
+                <p class="help">ভিসা, চুক্তিপত্র বা ডিমান্ড লেটারের ছবি। পরীক্ষার জন্য নমুনা .json ফাইলও চলবে। <span class="en">Photos of the visa, contract or demand letter. Synthetic .json test cases work too.</span></p>
+                <label class="drop" for="documents" data-for="documents">
+                  <b>ছবি এখানে টেনে আনুন, বা বেছে নিন</b>
+                  <small>JPG, PNG, PDF বা .json</small>
+                </label>
+                <input id="documents" class="file-hidden" name="documents" type="file" multiple accept="image/*,.json,application/pdf">
+                <ul class="chips" id="documentsChips"></ul>
+              </div>
+            </div>
+
+            <div class="step" id="slipStep">
+              <div class="num" aria-hidden="true">৩</div>
+              <div>
+                <h3>বেতনের স্লিপ <span class="en" style="display:inline;font-family:var(--body);font-size:15px">ঐচ্ছিক, বিদেশে পৌঁছানোর পরে</span></h3>
+                <p class="help">পে-স্লিপ বা বেতনের SMS-এর স্ক্রিনশট দিলে কম বেতন, বড় কাটা আর দেরি ধরা যায়। <span class="en">Payslips or salary SMS screenshots let the rules catch underpayment, large deductions and late pay.</span></p>
+                <label class="drop" for="payslips" data-for="payslips">
+                  <b>স্লিপ এখানে টেনে আনুন, বা বেছে নিন</b>
+                  <small>JPG, PNG বা .json</small>
+                </label>
+                <input id="payslips" class="file-hidden" name="payslips" type="file" multiple accept="image/*,.json">
+                <ul class="chips" id="payslipsChips"></ul>
+              </div>
+            </div>
+
+            <div class="submit">
+              <button id="go" class="go" type="submit">যাচাই করুন<small>Check</small></button>
+              <p id="status" role="status" aria-live="polite"></p>
+            </div>
+            <div class="working" id="working" aria-hidden="true">
+              <div class="scan"></div>
+              <div><b>মিলিয়ে দেখা হচ্ছে… <span id="elapsed">০</span> সেকেন্ড</b>
+                <span>AI প্রতিটি কাগজ পড়ছে, প্রতিটিতে এক মিনিট পর্যন্ত লাগতে পারে। নিয়মগুলো তারপর সিদ্ধান্ত নেয়। <span class="en" style="display:inline">The AI reads each document (up to a minute each), then the rules decide.</span></span>
+              </div>
+            </div>
+          </form>
+
+          <section id="out" class="sheet" hidden tabindex="-1" aria-labelledby="verdictTitle">
+            <div class="verdict">
+              <h2 id="verdictTitle"></h2>
+              <p id="verdictSub"></p>
+              <div class="counts" id="counts"></div>
+              <div class="stamp" id="verdictStamp" aria-hidden="true"><b></b><small></small></div>
+            </div>
+            <div class="res-body">
+              <div id="heardWrap" hidden>
+                <h3>যা শোনা বা পড়া হয়েছে <span class="en" style="display:inline;font-family:var(--body);font-size:14px">What we read</span></h3>
+                <blockquote class="heard" id="heard"></blockquote>
+              </div>
+              <div id="flags"></div>
+              <h3>সহজ ভাষায় <span class="en" style="display:inline;font-family:var(--body);font-size:14px">In plain Bangla</span></h3>
+              <pre class="letter" id="explain"></pre>
+              <h3>যা যাচাই করা যায়নি <span class="en" style="display:inline;font-family:var(--body);font-size:14px">Not checked</span></h3>
+              <ul class="unchecked" id="notchecked"></ul>
+              <div class="receipt" id="record"></div>
+            </div>
+          </section>
+        </div>
+
+        <aside class="side">
+          <div class="box">
+            <q>নিয়ম সিদ্ধান্ত নেয়, AI শুধু ব্যাখ্যা করে।</q>
+            <p>কোনো অমিল ঘোষণা করে লেখা নিয়ম আর সরকারি তালিকা। AI কথা শোনে, কাগজ পড়ে আর সহজ বাংলায় বুঝিয়ে বলে। <span class="en" style="color:#A9C6B9">Rules decide. AI only listens, reads and explains.</span></p>
+          </div>
+          <div class="box">
+            <h3>এই সার্ভারে যা চালু আছে</h3>
+            <ul class="status-list" id="statusList">
+              <li><i id="stVoice"></i><span id="stVoiceText">ভয়েস থেকে লেখা</span></li>
+              <li><i id="stAi"></i><span id="stAiText">AI দিয়ে কাগজ পড়া</span></li>
+              <li><i id="stChain"></i><span id="stChainText">রেকর্ড চেইন</span></li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="wa" id="whatsapp">
+    <div class="wrap wa-grid">
+      <div class="phone" aria-hidden="true">
+        <div class="screen">
+          <div class="chat-head"><div class="av">প্র</div><div><b>প্রতিশ্রুতি</b><small>সাধারণত কয়েক সেকেন্ডে উত্তর দেয়</small></div></div>
+          <div class="chat">
+            <div class="msg me"><div class="vn"><span class="play"></span><span class="bars" id="waBars"></span><span>০:১৪</span></div><time>১০:২১</time></div>
+            <div class="msg bot">ভয়েস নোট পাওয়া গেছে। আমি যা বুঝেছি তা 'check' দিলে দেখাব।<time>১০:২১</time></div>
+            <div class="msg me"><div class="photo">VISA · SPECIMEN</div>ভিসার ছবি<time>১০:২২</time></div>
+            <div class="msg bot">কাগজ পাওয়া গেছে। আরও থাকলে পাঠান, না হলে 'check' লিখুন।<time>১০:২২</time></div>
+            <div class="msg me">যাচাই<time>১০:২৩</time></div>
+            <div class="msg bot"><span class="flagline">• কাগজে লেখা কাজ আর প্রতিশ্রুত কাজ আলাদা</span><br><span class="flagline">• সরকার-নির্ধারিত খরচের চেয়ে বেশি টাকা নেওয়া হয়েছে</span><br><br>আপনার করণীয়: টাকা দেওয়ার আগে লিখিত ও স্বাক্ষরিত চুক্তিপত্র চান।<br><br>রেকর্ড: …/api/records/a1b2c3<time>১০:২৩</time></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h2>WhatsApp-এ প্রতিশ্রুতি</h2>
+        <p class="lede">কোনো অ্যাপ নামাতে হবে না। যে ফোনে দালালের সাথে কথা হয়, সেখান থেকেই যাচাই করুন।</p>
+        <p class="lede-en">No app to install. Send the voice note and photos on WhatsApp; the answer comes back in Bangla with a link to the record.</p>
+        <ol>
+          <li><div><b>নম্বরটি সেভ করুন</b><span>অন্য যেকোনো যোগাযোগের মতো।</span></div></li>
+          <li><div><b>দালাল যা বলেছে, ভয়েস নোটে পাঠান</b><span>নিজের ভাষায়, নিজের আঞ্চলিক টানে বলুন। লিখে পাঠালেও চলবে।</span></div></li>
+          <li><div><b>ভিসা ও চুক্তির ছবি পাঠান</b><span>পুরো পাতা যেন ছবিতে আসে।</span></div></li>
+          <li><div><b><kbd>যাচাই</kbd> লিখে পাঠান</b><span>ফলাফল আর রেকর্ডের লিংক ফেরত আসবে। সাহায্য লাগলে <kbd>সাহায্য</kbd> লিখুন।</span></div></li>
+        </ol>
+        <div class="wa-cta" id="waCta">
+          <p class="pilot" id="waPilot">পরীক্ষামূলক পর্যায়: WhatsApp নম্বরটি এখন একটি ছোট পরীক্ষক দলের জন্য খোলা। <span class="en" style="color:#A9C6B9">Pilot: the WhatsApp number is open to a small test group for now.</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="safety" id="safety">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>আপনার তথ্য, আপনার নিরাপত্তা</h2>
+        <p>যা আমরা করি, আর যা কখনো করি না। What Protishruti does with your information.</p>
+      </div>
+      <div class="safety-grid">
+        <div><b>পরিচয়ের নম্বর ঢেকে দেওয়া হয়</b><p>লেখা থেকে পাসপোর্ট, NID আর ফোন নম্বর AI-তে যাওয়ার আগেই ঢেকে দেওয়া হয়। ছবিতে এখনো নয়, তাই প্রোটোটাইপে শুধু নমুনা কাগজ দিন।</p></div>
+        <div><b>“নিরাপদ” বলা হয় না</b><p>প্রতিশ্রুতি কখনো বলে না চাকরি বা কাগজ নিরাপদ বা আসল। শুধু বলে কী মিলেছে, কী মেলেনি, আর কী যাচাই করা যায়নি।</p></div>
+        <div><b>রেকর্ড বদলানো যায় না</b><p>প্রতিটি যাচাইয়ের রেকর্ড আগেরটির হ্যাশের সাথে জোড়া। পরে কেউ বদলালে ধরা পড়ে। প্রিন্ট বা PDF করে রাখা যায়।</p></div>
+        <div><b>সিদ্ধান্ত আপনার</b><p>সন্দেহ হলে টাকা দেওয়ার আগে প্রবাসী কল্যাণ হেল্পলাইন বা কোনো অভিবাসী অধিকার সংস্থার সাথে কথা বলুন।</p></div>
+      </div>
+    </div>
   </section>
 </main>
-<script>
-const f = document.getElementById('f'), go = document.getElementById('go'), status = document.getElementById('status');
-const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-let fromVoice = false;
-document.getElementById('transcript').addEventListener('input', () => {
-  if (!document.getElementById('transcript').value.trim()) fromVoice = false;
+<footer>
+  <div class="wrap">
+    <p>এটি আইনি তথ্য, আইনি পরামর্শ নয়। প্রতিশ্রুতি কোনো সরকারি সেবা নয়।<br>Prototype by Team Singularity, Daffodil International University. International AI Builders Congress 2026.</p>
+    <p class="chain"><i id="chainDot"></i><span id="chainText">রেকর্ড চেইন যাচাই হচ্ছে…</span></p>
+  </div>
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const f = $('f'), go = $('go'), status = $('status');
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const bn = n => String(n).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]);
+const say = (msg, isErr) => { status.innerHTML = isErr ? '<span class="err">' + esc(msg) + '</span>' : esc(msg); };
+
+// Decorative waveforms (deterministic, so the page looks the same every load)
+function bars(el, n, h, cls) {
+  let s = 7, out = '';
+  for (let i = 0; i < n; i++) { s = (s * 9301 + 49297) % 233280; out += `<i style="height:${Math.round(4 + (s / 233280) * h)}px"></i>`; }
+  el.innerHTML = out;
+}
+bars($('heroWave'), 46, 20); bars($('waBars'), 30, 16);
+
+/* ---------- Server features ---------- */
+let voiceOn = true;
+fetch('/api/public-config').then(r => r.ok ? r.json() : null).then(c => {
+  if (!c) return;
+  voiceOn = !!c.asr_enabled;
+  const ai = c.llm_provider && c.llm_provider !== 'mock';
+  $('stVoice').className = voiceOn ? 'on' : '';
+  $('stVoiceText').textContent = voiceOn ? `ভয়েস থেকে লেখা চালু (${c.asr_backend === 'groq' ? 'Whisper' : 'Bengali.AI'})` : 'ভয়েস থেকে লেখা বন্ধ, লিখে দিন';
+  $('stAi').className = ai ? 'on' : '';
+  $('stAiText').textContent = ai ? `AI দিয়ে কাগজ পড়া চালু (${c.llm_provider})` : 'অফলাইন মোড: শুধু .json নমুনা কাগজ পড়া যায়';
+  $('stChain').className = c.chain_valid ? 'on' : '';
+  $('stChainText').textContent = c.chain_valid ? 'রেকর্ড চেইন অক্ষত' : 'রেকর্ড চেইনে সমস্যা';
+  $('chainDot').className = c.chain_valid ? 'on' : '';
+  $('chainText').textContent = c.chain_valid ? 'রেকর্ড চেইন অক্ষত · record chain intact' : 'রেকর্ড চেইন মিলছে না · record chain broken';
+  if (!voiceOn) {
+    $('voiceOff').hidden = false;
+    $('recBtn').disabled = true; $('tx').disabled = true;
+  }
+  if (c.whatsapp_number) {
+    $('waCta').innerHTML = `<a class="btn btn-gold" href="${esc(c.whatsapp_link)}" target="_blank" rel="noopener">WhatsApp-এ চ্যাট শুরু করুন</a><span class="wa-num">${esc(c.whatsapp_number)}</span>`;
+  }
+}).catch(() => {});
+
+/* ---------- Voice note: file, recording, preview ---------- */
+const audioInput = $('audio');
+let fromVoice = false, recorder = null, recChunks = [], recTimer = null;
+
+function setAudio(file) {
+  const dt = new DataTransfer();
+  if (file) dt.items.add(file);
+  audioInput.files = dt.files;
+  showAudio();
+}
+function showAudio() {
+  const file = audioInput.files[0];
+  $('audioChip').classList.toggle('show', !!file);
+  $('tx').disabled = !file || !voiceOn;
+  if (file) { $('audioPreview').src = URL.createObjectURL(file); $('audioName').textContent = file.name; }
+  else { $('audioPreview').removeAttribute('src'); }
+}
+audioInput.addEventListener('change', showAudio);
+$('audioClear').addEventListener('click', () => setAudio(null));
+
+const canRecord = !!(navigator.mediaDevices && window.MediaRecorder);
+if (!canRecord) $('recBtn').hidden = true;
+$('recBtn').addEventListener('click', async () => {
+  if (recorder && recorder.state === 'recording') { recorder.stop(); return; }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    recorder = new MediaRecorder(stream);
+    recChunks = [];
+    recorder.ondataavailable = e => e.data.size && recChunks.push(e.data);
+    recorder.onstop = () => {
+      stream.getTracks().forEach(t => t.stop());
+      clearInterval(recTimer);
+      $('recBtn').classList.remove('on'); $('recLabel').textContent = 'রেকর্ড করুন';
+      const type = recorder.mimeType || 'audio/webm';
+      const ext = type.includes('ogg') ? 'ogg' : type.includes('mp4') ? 'm4a' : 'webm';
+      setAudio(new File(recChunks, `voice-note.${ext}`, { type }));
+      say('রেকর্ড হয়েছে। এবার “শুনে লিখুন” চাপুন।');
+    };
+    recorder.start();
+    const t0 = Date.now();
+    $('recBtn').classList.add('on');
+    recTimer = setInterval(() => {
+      const s = Math.round((Date.now() - t0) / 1000);
+      $('recLabel').textContent = `থামান · ${bn(s)} সে.`;
+      if (s >= 90) recorder.stop();
+    }, 250);
+  } catch (err) {
+    say('মাইক্রোফোন চালু করা যায়নি। ব্রাউজারে মাইকের অনুমতি দিন, বা ফাইল দিন।', true);
+  }
 });
-document.getElementById('tx').addEventListener('click', async () => {
-  const audio = document.getElementById('audio').files[0];
-  if (!audio) { status.innerHTML = '<span class="err">Choose a voice note first.</span>'; return; }
+
+$('transcript').addEventListener('input', () => { if (!$('transcript').value.trim()) fromVoice = false; });
+
+$('tx').addEventListener('click', async () => {
+  const audio = audioInput.files[0];
+  if (!audio) { say('আগে একটি ভয়েস নোট দিন।', true); return; }
   const fd = new FormData(); fd.append('audio', audio);
-  status.textContent = 'Transcribing…';
+  $('tx').disabled = true;
+  say('শুনে লেখা হচ্ছে…');
   try {
     const res = await fetch('/api/transcribe', { method: 'POST', body: fd });
     const raw = await res.text();
     let d; try { d = JSON.parse(raw); } catch { throw new Error(`Server error ${res.status}: ${raw.slice(0, 200)}`); }
     if (!res.ok) throw new Error(d.detail || res.statusText);
-    document.getElementById('transcript').value = d.text;
+    $('transcript').value = d.text;
     fromVoice = true;
-    status.textContent = 'Done. Read the text, correct any mistakes, then click Check.';
-  } catch (err) { status.innerHTML = '<span class="err">' + esc(err.message) + '</span>'; }
+    $('transcript').focus();
+    say('লেখা হয়েছে। পড়ে দেখুন, ভুল শব্দ বা সংখ্যা ঠিক করুন, তারপর যাচাই চাপুন।');
+  } catch (err) { say(err.message, true); }
+  finally { $('tx').disabled = !audioInput.files[0] || !voiceOn; }
 });
 
+/* ---------- Examples ---------- */
+const EXAMPLES = {
+  sa: 'সৌদিতে ফ্যাক্টরির কাজ, বেতন ৩৫ হাজার টাকা। আমি মোট ৪ লাখ টাকা দিয়েছি। লাইসেন্স RL-9001।',
+  qa: 'কাতারে নির্মাণের কাজ, কোম্পানি Desert Star Contracting। বেতন ৪০ হাজার টাকা। দালালকে ৪ লাখ টাকা দিয়েছি। লাইসেন্স RL-9002।',
+  my: 'মালয়েশিয়ায় প্ল্যান্টেশনের কাজ, বেতন ৩০ হাজার টাকা। ২ লাখ টাকা দিয়েছি। লাইসেন্স RL-9003।'
+};
+document.querySelectorAll('[data-ex]').forEach(b => b.addEventListener('click', () => {
+  $('transcript').value = EXAMPLES[b.dataset.ex]; fromVoice = false; $('transcript').focus();
+}));
+
+/* ---------- Document drop zones with removable chips ---------- */
+function fileZone(id) {
+  const input = $(id), list = $(id + 'Chips'), zone = document.querySelector(`[data-for="${id}"]`);
+  let dt = new DataTransfer();
+  const sync = () => {
+    input.files = dt.files;
+    list.innerHTML = [...dt.files].map((file, i) =>
+      `<li><span title="${esc(file.name)}">${esc(file.name)}</span><button type="button" class="x" data-i="${i}" aria-label="${esc(file.name)} সরান">×</button></li>`).join('');
+  };
+  const add = files => { for (const file of files) dt.items.add(file); sync(); };
+  input.addEventListener('change', () => { add([...input.files]); });
+  list.addEventListener('click', e => {
+    const i = e.target.dataset?.i; if (i === undefined) return;
+    const next = new DataTransfer(); [...dt.files].forEach((file, j) => j != i && next.items.add(file)); dt = next; sync();
+  });
+  ['dragenter', 'dragover'].forEach(ev => zone.addEventListener(ev, e => { e.preventDefault(); zone.classList.add('over'); }));
+  ['dragleave', 'drop'].forEach(ev => zone.addEventListener(ev, e => { e.preventDefault(); zone.classList.remove('over'); }));
+  zone.addEventListener('drop', e => add([...e.dataTransfer.files]));
+  return () => { dt = new DataTransfer(); sync(); };
+}
+const clearDocs = fileZone('documents'), clearSlips = fileZone('payslips');
+
+/* ---------- Check ---------- */
 f.addEventListener('submit', async (e) => {
   e.preventDefault();
   const fd = new FormData();
-  const audio = document.getElementById('audio').files[0];
-  const transcript = document.getElementById('transcript').value.trim();
-  if (!audio && !transcript) { status.innerHTML = '<span class="err">Add a voice note or type what was promised.</span>'; return; }
+  const audio = audioInput.files[0];
+  const transcript = $('transcript').value.trim();
+  if (!audio && !transcript) { say('ভয়েস নোট দিন বা দালালের কথা লিখে দিন। Add a voice note or type the promise.', true); return; }
   if (audio) fd.append('audio', audio);
   if (transcript) fd.append('transcript', transcript);
   if (transcript && fromVoice) fd.append('from_voice', 'true');
-  for (const file of document.getElementById('documents').files) fd.append('documents', file);
-  for (const file of document.getElementById('payslips').files) fd.append('payslips', file);
+  for (const file of $('documents').files) fd.append('documents', file);
+  for (const file of $('payslips').files) fd.append('payslips', file);
 
-  go.disabled = true;
+  go.disabled = true; say('');
+  $('working').classList.add('show');
   const t0 = Date.now();
-  const tick = setInterval(() => { status.textContent = `Checking… ${Math.round((Date.now() - t0) / 1000)} s (the AI reads each document; up to a minute each)`; }, 1000);
+  const tick = setInterval(() => { $('elapsed').textContent = bn(Math.round((Date.now() - t0) / 1000)); }, 500);
   const ctrl = new AbortController();
   const stop = setTimeout(() => ctrl.abort(), 240000);
   try {
@@ -112,29 +745,71 @@ f.addEventListener('submit', async (e) => {
     let data;
     try { data = JSON.parse(raw); } catch { throw new Error(`Server error ${res.status}: ${raw.slice(0, 200)} (see the terminal running uvicorn)`); }
     if (!res.ok) throw new Error(typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail));
-    render(data); status.textContent = '';
+    render(data);
   } catch (err) {
-    const msg = err.name === 'AbortError' ? 'No answer after 4 minutes. Look at the terminal running uvicorn for the step that is stuck.' : err.message;
-    status.innerHTML = '<span class="err">' + esc(msg) + '</span>';
-  } finally { clearInterval(tick); clearTimeout(stop); go.disabled = false; }
+    say(err.name === 'AbortError' ? '৪ মিনিটেও উত্তর আসেনি। uvicorn চলা টার্মিনালে দেখুন কোন ধাপ আটকে আছে। No answer after 4 minutes.' : err.message, true);
+  } finally {
+    clearInterval(tick); clearTimeout(stop);
+    $('working').classList.remove('show'); $('elapsed').textContent = '০';
+    go.disabled = false;
+  }
 });
 
+const SEV = { critical: 'গুরুতর', warning: 'সতর্কতা', info: 'তথ্য' };
+
 function render(d) {
-  const flags = d.flags.map(fl => `
-    <div class="flag ${fl.severity}">
-      <div class="tag">${esc(fl.severity)} · ${esc(fl.rule_id)}</div>
-      <div><b>${esc(fl.title_bn)}</b><br><span class="muted">${esc(fl.title_en)}</span></div>
-      ${fl.promised ? `<div>Promised: ${esc(fl.promised)}</div>` : ''}
-      ${fl.found ? `<div>Found: ${esc(fl.found)}</div>` : ''}
-      <div class="muted">Source: ${esc(fl.source)}</div>
-    </div>`).join('');
-  document.getElementById('flags').innerHTML = flags || '<p>No mismatch found in what was shown. This does not mean the job is safe.</p>';
-  document.getElementById('heard').innerHTML = d.transcript ? `<b>যা শোনা/পড়া হয়েছে · What we read:</b> ${esc(d.transcript)}` : '';
-  document.getElementById('explain').textContent = d.explanation_bn;
-  document.getElementById('notchecked').innerHTML = d.not_checked.map(x => `<li>${esc(x)}</li>`).join('');
-  document.getElementById('record').innerHTML = d.record_id
-    ? `Protishruti Record: <a href="/api/records/${esc(d.record_id)}" target="_blank" rel="noopener">${esc(d.record_id)}</a> · SHA-256 <code>${esc(d.record_hash)}</code>` : '';
-  document.getElementById('out').hidden = false;
+  const n = { critical: 0, warning: 0, info: 0 };
+  d.flags.forEach(fl => n[fl.severity] = (n[fl.severity] || 0) + 1);
+
+  const stamp = $('verdictStamp');
+  let title, sub, mark, small, cls;
+  if (n.critical) { title = `${bn(n.critical)}টি গুরুতর অমিল পাওয়া গেছে`; sub = 'টাকা দেওয়ার আগে নিচের বিষয়গুলো পরিষ্কার করে নিন। Serious mismatches found.'; mark = 'অমিল'; small = 'MISMATCH'; cls = ''; }
+  else if (n.warning) { title = `${bn(n.warning)}টি বিষয়ে সতর্ক থাকুন`; sub = 'বড় অমিল পাওয়া যায়নি, তবে এগুলো যাচাই করা দরকার। Things to check before you go ahead.'; mark = 'সতর্ক'; small = 'CHECK'; cls = 'warn'; }
+  else { title = 'দেখানো কাগজে অমিল পাওয়া যায়নি'; sub = 'এর মানে চাকরিটি নিরাপদ, তা নয়। নিচের “যা যাচাই করা যায়নি” অংশটি পড়ুন। No mismatch in what was shown; this does not mean the job is safe.'; mark = 'অমিল নেই'; small = 'IN WHAT WAS SHOWN'; cls = 'clear'; }
+  $('verdictTitle').textContent = title;
+  $('verdictSub').textContent = sub;
+  stamp.className = 'stamp ' + cls;
+  stamp.querySelector('b').textContent = mark;
+  stamp.querySelector('small').textContent = small;
+  void stamp.offsetWidth; stamp.classList.add('go-anim');
+  $('counts').innerHTML = ['critical', 'warning', 'info'].filter(k => n[k])
+    .map(k => `<span class="count ${k}">${bn(n[k])} ${SEV[k]}</span>`).join('');
+
+  $('heardWrap').hidden = !d.transcript;
+  $('heard').textContent = d.transcript || '';
+
+  $('flags').innerHTML = d.flags.map(fl => `
+    <article class="flag ${esc(fl.severity)}"><div class="flag-in">
+      <div class="flag-top"><b>${esc(fl.title_bn)}</b><span class="sev">${esc(SEV[fl.severity] || fl.severity)}<code>${esc(fl.rule_id)}</code></span></div>
+      <span class="en">${esc(fl.title_en)}</span>
+      ${(fl.promised || fl.found) ? `<div class="compare">
+        <div><small>যা বলা হয়েছিল · Promised</small><strong>${esc(fl.promised || '—')}</strong></div>
+        <div><small>যা পাওয়া গেছে · Found</small><strong>${esc(fl.found || '—')}</strong></div></div>` : ''}
+      <p class="src">সূত্র: ${esc(fl.source)}</p>
+    </div></article>`).join('');
+
+  $('explain').textContent = d.explanation_bn;
+  $('notchecked').innerHTML = d.not_checked.map(x => `<li>${esc(x)}</li>`).join('');
+  $('record').innerHTML = d.record_id ? `
+    <h4>প্রতিশ্রুতি রেকর্ড</h4>
+    <span class="rid">${esc(d.record_id)}</span>
+    <code id="hashText">SHA-256 ${esc(d.record_hash)}</code>
+    <div class="row">
+      <a class="tool primary" href="/api/records/${esc(d.record_id)}" target="_blank" rel="noopener">রেকর্ড খুলুন ও প্রিন্ট করুন</a>
+      <button type="button" class="tool" id="copyHash">হ্যাশ কপি করুন</button>
+      <button type="button" class="tool" id="again">আরেকটি যাচাই</button>
+    </div>` : '';
+  $('copyHash')?.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(d.record_hash); $('copyHash').textContent = 'কপি হয়েছে'; } catch { $('copyHash').textContent = 'কপি করা যায়নি'; }
+  });
+  $('again')?.addEventListener('click', () => {
+    f.reset(); setAudio(null); clearDocs(); clearSlips(); fromVoice = false;
+    $('out').hidden = true; say(''); $('check').scrollIntoView(); $('transcript').focus();
+  });
+
+  $('out').hidden = false;
+  $('out').scrollIntoView({ block: 'start' });
+  $('out').focus({ preventScroll: true });
 }
 </script>
 </body>

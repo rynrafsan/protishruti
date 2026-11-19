@@ -19,6 +19,7 @@ from fastapi import APIRouter, BackgroundTasks, HTTPException, Request
 from fastapi.responses import PlainTextResponse
 
 from . import asr, docreader, explain, extract, record, rules
+from .redact import redact
 from .schema import CheckResult, Promise
 
 router = APIRouter(prefix="/whatsapp")
@@ -27,7 +28,8 @@ ACCESS_TOKEN = os.getenv("WA_ACCESS_TOKEN", "")
 PHONE_ID = os.getenv("WA_PHONE_NUMBER_ID", "")
 GRAPH = f"https://graph.facebook.com/{os.getenv('WA_API_VERSION', 'v22.0')}"
 
-SESSIONS: dict[str, dict] = defaultdict(lambda: {"transcripts": [], "docs": [], "attachments": {}})
+SESSIONS: dict[str, dict] = defaultdict(lambda: {"transcripts": [], "docs": [], "attachments": {},
+                                                 "from_voice": False})
 HELP = ("প্রতিশ্রুতি (প্রোটোটাইপ)। ১) দালাল কী বলেছে তা ভয়েস বা লিখে পাঠান। "
         "২) ভিসা/চুক্তির ছবি পাঠান। ৩) 'check' লিখুন। শুধু নমুনা (SPECIMEN) কাগজ ব্যবহার করুন।")
 
@@ -83,6 +85,7 @@ async def handle_message(msg: dict):
             data, _ = await download_media(msg["audio"]["id"])
             s["attachments"][f"audio:{msg['audio']['id']}"] = data
             s["transcripts"].append(asr.transcribe(data)["text"])
+            s["from_voice"] = True
             await send_text(user, "ভয়েস নোট পাওয়া গেছে। আমি যা বুঝেছি তা 'check' দিলে দেখাব।")
         elif kind in ("image", "document"):
             media = msg[kind]
@@ -101,14 +104,15 @@ async def run_check(user: str):
     if not s["transcripts"]:
         await send_text(user, "আগে দালাল কী বলেছে তা পাঠান।")
         return
-    promise = extract.extract_promise("\n".join(s["transcripts"]))
+    promise = extract.extract_promise("\n".join(s["transcripts"]), from_voice=s["from_voice"])
     docs = [d for d in s["docs"] if d.source != "payslip"]
     slips = [d for d in s["docs"] if d.source == "payslip"]
     flags = rules.run_rules(promise, docs, slips)
     missing = rules.not_checked(promise, docs)
     text = explain.explain(flags, missing)
-    result = CheckResult(promise=promise, documents=docs, payslips=slips, flags=flags,
+    result = CheckResult(transcript=redact("\n".join(s["transcripts"])), promise=promise, documents=docs, payslips=slips, flags=flags,
                          not_checked=missing, explanation_bn=text)
     rid, _ = record.save_record(result, s["attachments"])
     base = os.getenv("PUBLIC_BASE_URL", "")
     await send_text(user, text + (f"\n\nরেকর্ড: {base}/api/records/{rid}" if base else f"\n\nরেকর্ড আইডি: {rid}"))
+    SESSIONS.pop(user, None)  # start fresh for the next check

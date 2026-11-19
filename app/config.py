@@ -52,3 +52,5 @@ RECORDS_DIR.mkdir(parents=True, exist_ok=True)
 
 # Safety: refuse real data on free tiers unless explicitly allowed
 ALLOW_REAL_DATA = os.getenv("ALLOW_REAL_DATA", "false").lower() == "true"
+# The WhatsApp number shown on the website (digits with country code, e.g. 8801XXXXXXXXX). Empty = pilot.
+WA_DISPLAY_NUMBER = "".join(ch for ch in os.getenv("WA_DISPLAY_NUMBER", "").split("#")[0] if ch.isdigit())

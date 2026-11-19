@@ -61,26 +61,63 @@ def verify_chain() -> bool:
     return True
 
 
+SEVERITY_BN = {"critical": "গুরুতর", "warning": "সতর্কতা", "info": "তথ্য"}
+
+
 def render_html(record_id: str) -> str:
+    """Printable record page, styled like the main site (and fine on paper)."""
     body = json.loads((config.RECORDS_DIR / f"{record_id}.json").read_text(encoding="utf-8"))
     r = body["result"]
     e = html.escape
-    rows = "".join(
-        f"<tr><td>{e(f['severity'])}</td><td>{e(f['title_bn'])}<br><small>{e(f['title_en'])}</small></td>"
-        f"<td>{e(str(f.get('promised') or ''))}</td><td>{e(str(f.get('found') or ''))}</td><td>{e(f['source'])}</td></tr>"
-        for f in r["flags"]) or "<tr><td colspan=5>No mismatch found in what was shown.</td></tr>"
-    atts = "".join(f"<li>{e(n)}: <code>{h}</code></li>" for n, h in body["attachments_sha256"].items())
-    return f"""<!doctype html><html lang="bn"><meta charset="utf-8">
-<title>Protishruti Record {e(record_id)}</title>
-<style>body{{font-family:'Noto Sans Bengali',system-ui,sans-serif;max-width:860px;margin:2rem auto;padding:0 1rem}}
-table{{border-collapse:collapse;width:100%}}td,th{{border:1px solid #ccc;padding:.4rem;vertical-align:top}}
-.wm{{color:#b00;font-weight:700}}code{{word-break:break-all}}</style>
-<h1>প্রতিশ্রুতি রেকর্ড · Protishruti Record</h1>
-<p class="wm">PROTOTYPE — SYNTHETIC DATA ONLY. Legal information, not legal advice.</p>
-<p>Record ID: <b>{e(record_id)}</b> · Created (UTC): {e(body['created_utc'])}</p>
-<h2>Flags</h2><table><tr><th>Severity</th><th>Flag</th><th>Promised</th><th>Found</th><th>Source</th></tr>{rows}</table>
-<h2>Explanation</h2><pre style="white-space:pre-wrap">{e(r['explanation_bn'])}</pre>
-<h2>Not checked</h2><ul>{''.join(f'<li>{e(x)}</li>' for x in r['not_checked'])}</ul>
-<h2>Evidence fingerprints</h2><ul>{atts or '<li>none</li>'}</ul>
-<p>Record hash (SHA-256): <code>{e(body['hash'])}</code><br>Previous hash: <code>{e(body['prev_hash'])}</code></p>
-<p><small>Print this page to PDF to keep a copy.</small></p></html>"""
+    flags = "".join(
+        f"""<div class="flag {e(f['severity'])}"><div class="sev">{e(SEVERITY_BN.get(f['severity'], f['severity']))}
+        <small>{e(f['rule_id'])}</small></div><div><b>{e(f['title_bn'])}</b><br><span class="en">{e(f['title_en'])}</span>
+        <dl>{f"<dt>যা বলা হয়েছিল</dt><dd>{e(str(f['promised']))}</dd>" if f.get('promised') else ''}
+        {f"<dt>যা পাওয়া গেছে</dt><dd>{e(str(f['found']))}</dd>" if f.get('found') else ''}
+        <dt>সূত্র</dt><dd>{e(f['source'])}</dd></dl></div></div>"""
+        for f in r["flags"]) or "<p>দেখানো কাগজে অমিল পাওয়া যায়নি। এর মানে চাকরিটি নিরাপদ, তা নয়।</p>"
+    atts = "".join(f"<li>{e(n)}<code>{h}</code></li>" for n, h in body["attachments_sha256"].items())
+    heard = (f"<h2>যা শোনা বা পড়া হয়েছে</h2><blockquote>{e(r['transcript'])}</blockquote>"
+             if r.get("transcript") else "")
+    return f"""<!doctype html><html lang="bn"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>প্রতিশ্রুতি রেকর্ড {e(record_id)}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=IBM+Plex+Mono:wght@500&family=Tiro+Bangla&display=swap" rel="stylesheet">
+<style>
+:root{{--green:#0E4B3B;--paper:#F7F9F6;--ink:#1F2D28;--muted:#5B6B65;--line:#CFD9D3;--red:#C0262D;--violet:#5D3A9B;--gold:#C8A456}}
+*{{box-sizing:border-box}}body{{margin:0;background:#E9EFEB;color:var(--ink);font:16px/1.65 'Hind Siliguri','Noto Sans Bengali',system-ui,sans-serif}}
+.sheet{{max-width:860px;margin:24px auto;background:var(--paper);border:1px solid var(--line);position:relative;overflow:hidden}}
+.sheet::after{{content:'PROTOTYPE · SYNTHETIC DATA';position:absolute;top:42%;left:-10%;right:-10%;text-align:center;transform:rotate(-18deg);
+font:700 64px/1 'Hind Siliguri',sans-serif;color:rgba(192,38,45,.07);pointer-events:none}}
+header{{background:var(--green);color:#fff;padding:22px 28px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:end}}
+header h1{{font:400 30px/1.2 'Tiro Bangla',serif;margin:0}}header p{{margin:2px 0 0;color:#cfe1d8;font-size:14px}}
+.id{{font:500 13px/1.4 'IBM Plex Mono',monospace;color:var(--gold);text-align:right}}
+main{{padding:8px 28px 28px}}h2{{font:400 21px/1.3 'Tiro Bangla',serif;margin:26px 0 10px;color:var(--green)}}
+.note{{background:#fff;border:1px dashed var(--red);color:var(--red);padding:8px 12px;font-size:14px;margin-top:18px}}
+.flag{{display:grid;grid-template-columns:96px 1fr;gap:14px;border-left:5px solid var(--line);background:#fff;padding:12px 14px;margin:10px 0}}
+.flag.critical{{border-color:var(--red)}}.flag.warning{{border-color:var(--violet)}}.flag.info{{border-color:var(--green)}}
+.sev{{font-weight:700}}.critical .sev{{color:var(--red)}}.warning .sev{{color:var(--violet)}}.info .sev{{color:var(--green)}}
+.sev small{{display:block;font:500 12px 'IBM Plex Mono',monospace;color:var(--muted)}}.en{{color:var(--muted);font-size:14px}}
+dl{{display:grid;grid-template-columns:max-content 1fr;gap:2px 12px;margin:8px 0 0;font-size:14px}}dt{{color:var(--muted)}}dd{{margin:0}}
+blockquote{{margin:0;padding:10px 14px;border-left:3px solid var(--gold);background:#fff}}
+pre{{white-space:pre-wrap;font:inherit;background:#fff;border:1px solid var(--line);padding:14px;margin:0}}
+ul{{padding-left:20px}}li code,.hash code{{display:block;font:500 12px/1.5 'IBM Plex Mono',monospace;word-break:break-all;color:var(--muted)}}
+.hash{{border-top:2px dashed var(--line);margin-top:26px;padding-top:14px}}
+.actions{{margin-top:18px}}button{{font:600 15px 'Hind Siliguri',sans-serif;background:var(--green);color:#fff;border:0;padding:10px 18px;cursor:pointer}}
+@media print{{body{{background:#fff}}.sheet{{margin:0;border:0}}.actions{{display:none}}header{{-webkit-print-color-adjust:exact;print-color-adjust:exact}}}}
+@media (max-width:560px){{header,main{{padding-left:16px;padding-right:16px}}.flag{{grid-template-columns:1fr}}}}
+</style></head><body><div class="sheet">
+<header><div><h1>প্রতিশ্রুতি রেকর্ড</h1><p>Protishruti Record. Legal information, not legal advice.</p></div>
+<div class="id">{e(record_id)}<br>{e(body['created_utc'])} UTC</div></header>
+<main><p class="note">প্রোটোটাইপ: শুধু নমুনা (SYNTHETIC) তথ্য। Prototype with synthetic data only.</p>
+{heard}<h2>অমিল ও সতর্কতা</h2>{flags}
+<h2>সহজ ভাষায় ব্যাখ্যা</h2><pre>{e(r['explanation_bn'])}</pre>
+<h2>যা যাচাই করা যায়নি</h2><ul>{''.join(f'<li>{e(x)}</li>' for x in r['not_checked'])}</ul>
+<h2>প্রমাণের আঙুলের ছাপ</h2><ul>{atts or '<li>কোনো ফাইল নেই · no files</li>'}</ul>
+<div class="hash"><b>রেকর্ড হ্যাশ (SHA-256)</b><code>{e(body['hash'])}</code>
+<b>আগের রেকর্ডের হ্যাশ</b><code>{e(body['prev_hash'])}</code>
+<p class="en">প্রতিটি রেকর্ড আগেরটির হ্যাশের সাথে জোড়া। পরে কেউ বদলালে হিসাব মিলবে না।
+Each record is chained to the previous one, so a later change breaks the chain.</p></div>
+<div class="actions"><button onclick="print()">প্রিন্ট বা PDF সেভ করুন</button></div>
+</main></div></body></html>"""

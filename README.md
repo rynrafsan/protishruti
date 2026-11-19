@@ -155,7 +155,7 @@ docker run -p 8000:8000 --env-file .env protishruti
 ## Phase 6 — WhatsApp (after the web demo works)
 
 1. Go to https://developers.facebook.com → create an app → add the **WhatsApp** product. A free test number is created, and it can message up to **5 verified phone numbers** (your team's phones).
-2. Set `WA_VERIFY_TOKEN` (any secret string you choose), `WA_ACCESS_TOKEN`, `WA_PHONE_NUMBER_ID` and `PUBLIC_BASE_URL` in the environment.
+2. Set `WA_VERIFY_TOKEN` (any secret string you choose), `WA_ACCESS_TOKEN`, `WA_PHONE_NUMBER_ID (and WA_DISPLAY_NUMBER to show the number on the website)` and `PUBLIC_BASE_URL` in the environment.
 3. In Meta's WhatsApp configuration, set the webhook URL to `https://<your-domain>/whatsapp/webhook` with the same verify token, and subscribe to `messages`. The webhook must be public HTTPS. For local testing use `ngrok http 8000` or Cloudflare Tunnel.
 4. Test from a verified phone: send `help`, then a text promise, then a document photo, then `check`.
 

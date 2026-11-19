@@ -66,6 +66,16 @@ def health():
             "chain_valid": record.verify_chain()}
 
 
+@app.get("/api/public-config")
+def public_config():
+    """What the web page needs to know: which features are switched on."""
+    n = config.WA_DISPLAY_NUMBER
+    return {"llm_provider": config.LLM_PROVIDER, "asr_enabled": config.ASR_ENABLED,
+            "asr_backend": config.ASR_BACKEND, "chain_valid": record.verify_chain(),
+            "whatsapp_number": f"+{n}" if n else None,
+            "whatsapp_link": f"https://wa.me/{n}?text=%E0%A6%B8%E0%A6%BE%E0%A6%B9%E0%A6%BE%E0%A6%AF%E0%A7%8D%E0%A6%AF" if n else None}
+
+
 @app.post("/api/transcribe")
 async def transcribe(audio: UploadFile = File(...)):
     """Speech-to-text only, so the worker can read and correct the text before the check."""

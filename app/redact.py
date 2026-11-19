@@ -19,7 +19,16 @@ def to_ascii_digits(text: str) -> str:
 
 
 def redact(text: str) -> str:
-    out = to_ascii_digits(text or "")
+    """Mask ID numbers written in Bangla or English digits; everything else keeps its original script."""
+    text = text or ""
+    ascii_ = to_ascii_digits(text)  # same length as text, so match positions carry over
+    spans = []
     for pat, repl in PATTERNS:
-        out = pat.sub(repl, out)
-    return out
+        for m in pat.finditer(ascii_):
+            if not any(m.start() < e and s < m.end() for s, e, _ in spans):
+                spans.append((m.start(), m.end(), repl))
+    out, pos = [], 0
+    for s, e, repl in sorted(spans):
+        out.append(text[pos:s]); out.append(repl); pos = e
+    out.append(text[pos:])
+    return "".join(out)
