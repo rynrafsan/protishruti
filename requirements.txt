@@ -1,0 +1,12 @@
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+pydantic>=2.7
+httpx>=0.27
+python-dotenv>=1.0
+pillow>=10  # shrink phone photos before sending them to the AI
+# LLM providers (install the one you use)
+google-genai>=1.0
+anthropic>=0.40
+# dev
+pytest>=8

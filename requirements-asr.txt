@@ -1,0 +1,4 @@
+# Speech-to-text extras (large download; GPU recommended). Also install ffmpeg on the system.
+torch
+transformers>=4.44
+accelerate

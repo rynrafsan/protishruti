@@ -1,0 +1,12 @@
+{
+  "_note": "Approximate BDT per unit, for comparing promised vs actual salaries only. Replace with a live rate source before real use.",
+  "bdt_per_unit": {
+    "BDT": 1.0,
+    "SAR": 32.0,
+    "MYR": 27.0,
+    "QAR": 33.0,
+    "AED": 33.0,
+    "OMR": 315.0,
+    "KWD": 395.0
+  }
+}

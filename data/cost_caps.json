@@ -1,0 +1,15 @@
+{
+  "_note": "Government-fixed maximum migration costs in BDT. VERIFY each figure against the latest Ministry of Expatriates' Welfare circular before any real use. Sources: Bonik Barta (2016 fee table), Dhaka Tribune (Malaysia 2021, Kuwait).",
+  "_sources": [
+    "https://en.bonikbarta.com/bangladesh/NYU3qQDrJyU2Ewbx/",
+    "https://www.dhakatribune.com/amp/bangladesh/399203/highest-costs-lowest-returns-bangladeshi"
+  ],
+  "caps_bdt": {
+    "SA": 165000,
+    "MY": 78990,
+    "OM": 100780,
+    "QA": 100780,
+    "AE": 107780,
+    "KW": 106780
+  }
+}
