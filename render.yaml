@@ -16,3 +16,17 @@ services:
         value: groq
       - key: ALLOW_REAL_DATA
         value: "false"
+      - key: DOCS_ADMIN_PASSWORD
+        sync: false
+      - key: DOCS_SUPERADMIN_PASSWORD
+        sync: false
+      - key: DOCS_SECRET
+        generateValue: true
+      - key: DOCS_OPEN_FROM
+        value: "2026-11-20T00:00"
+      - key: DOCS_OPEN_UNTIL
+        value: "2026-12-31T23:59"
+      - key: DOCS_GITHUB_REPO
+        sync: false
+      - key: DOCS_GITHUB_TOKEN
+        sync: false

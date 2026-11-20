@@ -102,7 +102,7 @@ def run(gold_set, verbose=False):
     misses, wrong = [], []
     t0 = time.perf_counter()
     for q, gold, must in gold_set:
-        res = rag.answer(q)
+        res = rag.answer(q, generate=False)  # offline: never spends the AI quota
         # Fee questions answered from the table cite their passages directly; others use search order.
         ids = [h["id"] for h in res["sources"]] if res["mode"] == "fact" else [h["id"] for h in rag.search(q, k=5)]
         rank = next((i + 1 for i, x in enumerate(ids) if x in gold), None)
@@ -126,7 +126,7 @@ def main(verbose: bool = False):
     rag.get_index.cache_clear()
     h1, h3, rr, ok, misses, wrong, ms = run(GOLD, verbose)
     n = len(GOLD)
-    refused = sum(rag.answer(q)["mode"] == "no_match" for q in OFF_TOPIC)
+    refused = sum(rag.answer(q, generate=False)["mode"] == "no_match" for q in OFF_TOPIC)
     print(f"knowledge base : {len(rag.get_index().chunks)} passages")
     print(f"questions      : {n} (Bangla, Banglish, English)")
     print(f"hit@1          : {h1}/{n} ({h1/n:.0%})")

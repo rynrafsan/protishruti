@@ -17,14 +17,28 @@ from starlette.concurrency import run_in_threadpool
 
 from .redact import redact
 from . import asr, config, docreader, explain, extract, record, rules, whatsapp
+from .docsite import live as docs_live, routes as docs_routes
 from .schema import CheckResult, Promise
 
-app = FastAPI(title="Protishruti", version="0.1.0")
+# /docs is the live pitch deck + technical documentation (app/docsite); the API reference moves to /api/docs
+app = FastAPI(title="Protishruti", version="0.2.0", docs_url="/api/docs", redoc_url="/api/redoc")
 app.include_router(whatsapp.router)
+app.include_router(docs_routes.router)
 FRONTEND = Path(__file__).resolve().parent.parent / "frontend" / "index.html"
 BRAND = FRONTEND.parent / "brand"
 log = logging.getLogger("protishruti")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+
+
+@app.middleware("http")
+async def count_requests(request: Request, call_next):
+    """Usage numbers for /docs: counts and response times per route, no personal data."""
+    t = time.perf_counter()
+    response = await call_next(request)
+    route = request.scope.get("route")
+    docs_live.record_request(request.method, getattr(route, "path", "unmatched"), response.status_code,
+                             (time.perf_counter() - t) * 1000)
+    return response
 
 
 async def _step(label: str, fn, *args, **kwargs):
@@ -66,6 +80,7 @@ from fastapi.staticfiles import StaticFiles  # noqa: E402
 
 mimetypes.add_type("application/manifest+json", ".webmanifest")
 app.mount("/brand", StaticFiles(directory=BRAND), name="brand")  # logo, icons, social preview
+app.mount("/docs/assets", StaticFiles(directory=FRONTEND.parent / "docs" / "assets"), name="docs-assets")
 
 
 @app.get("/favicon.ico", include_in_schema=False)
@@ -75,6 +90,7 @@ def favicon():
 
 @app.get("/health")
 def health():
+    """Liveness check for the host; also reports whether the record hash chain is intact."""
     return {"ok": True, "llm_provider": config.LLM_PROVIDER, "asr_enabled": config.ASR_ENABLED, "asr_backend": config.ASR_BACKEND,
             "chain_valid": record.verify_chain()}
 
@@ -140,6 +156,7 @@ async def check(
     documents: list[UploadFile] = File(default_factory=list),
     payslips: list[UploadFile] = File(default_factory=list),
 ):
+    """Check a promise against documents: rules decide, AI explains; saves a hash-chained Promise Record."""
     attachments: dict[str, bytes] = {}
 
     # 1. Promise: from audio, transcript or JSON. A transcript the worker checked wins over
@@ -194,6 +211,7 @@ async def check(
 
 @app.get("/api/records/{record_id}", response_class=HTMLResponse)
 def get_record(record_id: str):
+    """Printable Promise Record page."""
     if not record_id.isalnum() or not (config.RECORDS_DIR / f"{record_id}.json").exists():
         raise HTTPException(404, "Record not found")
     return record.render_html(record_id)

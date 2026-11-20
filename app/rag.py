@@ -733,7 +733,8 @@ def topics() -> list[dict]:
 
 
 # ---------------------------------------------------------------- the main entry point
-def answer(question: str, k: int = 4) -> dict:
+def answer(question: str, k: int = 4, generate: bool | None = None) -> dict:
+    """generate=False forces the offline answer (no AI call); None follows LLM_PROVIDER and RAG_GENERATE."""
     import time
     from . import config, llm  # local import keeps rag usable without the app config
 
@@ -763,7 +764,9 @@ def answer(question: str, k: int = 4) -> dict:
         h["n"] = n
     ext_text, marks = extractive(question, hits)
     fallback = {"answer": f"{ext_text}\n{DISCLAIMER}", "sources": hits, "mode": "extractive", "highlights": marks}
-    if config.LLM_PROVIDER == "mock" or not getattr(config, "RAG_GENERATE", True):
+    if generate is None:
+        generate = config.LLM_PROVIDER != "mock" and getattr(config, "RAG_GENERATE", True)
+    if not generate:
         return done(fallback, hits)
     passages = "\n\n".join(f"[{h['n']}] {h['title']} > {h['section']}\n{h['text']}" for h in hits)
     try:

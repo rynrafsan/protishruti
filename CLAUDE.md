@@ -19,6 +19,7 @@ A prototype that checks what a broker promised a Bangladeshi migrant worker agai
 - `app/explain.py` — flags → Bangla text (LLM or template).
 - `app/record.py` — SHA-256 hash-chained records + HTML view.
 - `app/main.py` — FastAPI: `/api/check`, `/api/records/{id}`, `/health`; `app/whatsapp.py` — webhook.
+- `app/docsite/` — live `/docs` (pitch deck + tech docs + live data) and `/docs/admin`; content in `data/docs/content.json`. Swagger is at `/api/docs`.
 - `tools/synth/` — synthetic case generator + renderer; `tools/evaluate.py` — per-rule recall.
 
 ## Conventions

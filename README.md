@@ -31,6 +31,9 @@ data/           reference data: cost caps, FX, agency list (sample), watchlist
 data/knowledge/ RAG knowledge base: OEMA 2013, fee caps, complaints, helplines, agencies (each section cites a source URL)
 frontend/       single-page upload UI (served at /)
 frontend/brand/ logo (SVG), icons, favicon, social preview image, web manifest
+frontend/docs/  the live /docs page, its admin panel and the "not available" page
+app/docsite/    /docs backend: visibility + schedule, admin sign-in, drafts, versions, live data, GitHub sync
+data/docs/      content.json: the committed /docs content (tools/docs_default.py writes the first version)
 tools/synth/    synthetic case generator + renderer
 tools/          evaluate.py (rule recall), asr_eval.py (WER per dialect), rag_eval.py, rag_contexts.py
 tests/          pytest unit tests
@@ -58,6 +61,34 @@ question ─▶ redact (phone/passport/NID) ─▶ understand: Banglish → Bang
 - **Settings:** `RAG_GENERATE=true` lets the AI write answers (Groq: about 500 tokens each; on the free tier's per-minute limit it falls back at once instead of waiting). `false` = offline sentences only.
 - **Evaluation:** `python tools/rag_eval.py` (offline, no AI calls). 41 tuning questions in Bangla, Banglish and English: hit@3 100%, key fact in the answer 41/41, 5/5 off-topic refused. 16 held-out questions written after tuning, **first run**: hit@1 88%, hit@3 100%, MRR 0.94, key fact 12/16 (75%); the four misses were general gaps that are now fixed (16/16), so that set is no longer unseen.
 
+### 0.2 Live docs (`/docs`)
+
+`/docs` is a pitch deck, the technical documentation and a live view of the running system on one page, for judges and investors. The interactive API reference moved to `/api/docs`.
+
+- **Pitch deck** (Problem → Vision, 12 sections, every figure with a source link) with a **Present** button that turns it into full-screen slides (arrow keys, Esc).
+- **Technical documentation**: overview, feature matrix, architecture and data-flow diagrams (Mermaid), stack, API, data layer, AI layer, roadmap, performance, security, analytics, contributors, changelog.
+- **Live panels**, read from the running app every 30 seconds: features switched on, endpoints (from OpenAPI), knowledge-base size, usage counts and response times since start, and the rule benchmark and RAG evaluation **re-run on the server** the first time `/docs` is opened after a start (offline, no AI calls, about a second).
+- Search (`/`), section links, Markdown export (`/docs/export.md`), print/PDF, share link.
+
+**Admin panel: `/docs/admin`.** Set the passwords in the environment (12+ characters; never commit them):
+
+| Variable | Default | What it does |
+|---|---|---|
+| `DOCS_ADMIN_PASSWORD` | empty (admin off) | Admin: edit, save drafts, publish, turn /docs on or off, set the window, upload team photos |
+| `DOCS_SUPERADMIN_PASSWORD` | empty | Super Admin: also restore old versions, reset content or settings, read the activity log |
+| `DOCS_SECRET` | random per start | Signs admin sessions; set it so sign-ins survive restarts |
+| `DOCS_PUBLIC` | `true` | Master switch; `false` shows a "not available" page (HTTP 403) |
+| `DOCS_SCHEDULE` | `true` | Use the window below |
+| `DOCS_OPEN_FROM` / `DOCS_OPEN_UNTIL` | `2026-11-20T00:00` / `2026-12-31T23:59` | Window in Bangladesh time (GMT+6); the end minute is included |
+| `DOCS_GITHUB_REPO` / `DOCS_GITHUB_TOKEN` | empty | Optional: each publish commits `data/docs/content.json`, each visibility change `data/docs/settings.json` |
+| `DOCS_DATA_DIR` | `data/runtime/docs` | Where drafts, versions and the activity log are kept |
+
+The order of precedence for visibility: environment → `data/docs/settings.json` (committed) → changes made in the admin panel on this server. Signed-in admins can always open `/docs`, with a ribbon saying whether the public can.
+
+**On Render's free plan the disk is wiped on every restart** (and the free server restarts after 15 idle minutes). Admin-panel changes therefore last only until the next restart unless you make them permanent: set the `DOCS_*` visibility variables in Render, and either download `content.json` from the admin panel and commit it to `data/docs/`, or set `DOCS_GITHUB_REPO` (e.g. `rynrafsan/protishruti`) and `DOCS_GITHUB_TOKEN` (a fine-grained token for this one repository with *Contents: read and write*) so publishing commits for you; Render then redeploys with the new content.
+
+`python tools/docs_default.py` rewrites `data/docs/content.json` from the script (it overwrites edits; prefer the admin panel). Tests: `tests/test_docs.py`.
+
 ---
 
 ## Phase 1 — Run it locally (30 minutes)
@@ -80,7 +111,7 @@ Open http://localhost:8000 and paste a test promise:
 সৌদিতে ফ্যাক্টরির কাজ, বেতন ৩৫ হাজার টাকা। আমি মোট ৪ লাখ টাকা দিয়েছি। লাইসেন্স RL-9001।
 ```
 
-You should see R05 (fee above the Saudi cap) and R07 (no written contract). Click the record link to see the hashed Promise Record. The API docs are at http://localhost:8000/docs.
+You should see R05 (fee above the Saudi cap) and R07 (no written contract). Click the record link to see the hashed Promise Record. The live pitch deck and technical docs are at http://localhost:8000/docs (section 0.2); the interactive API reference is at http://localhost:8000/api/docs.
 
 **First commit:** create a GitHub repository (private until you are ready), then push.
 
@@ -163,7 +194,8 @@ The default model is `bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium` 
 1. Push to GitHub.
 2. Render → **New → Blueprint** → choose the repository (it reads `render.yaml`).
 3. Add `OPENAI_API_KEY` (your Groq key) in the dashboard; `LLM_PROVIDER` is already `groq`.
-4. Open `https://<app>.onrender.com/health`.
+4. Optional, for `/docs/admin`: add `DOCS_ADMIN_PASSWORD`, `DOCS_SUPERADMIN_PASSWORD` and `DOCS_SECRET` (see section 0.2).
+5. Open `https://<app>.onrender.com/health`, then `/docs`.
 
 Free-tier caveats: the service sleeps when idle (the first request is slow), and the disk is temporary, so records disappear on redeploy. Use a database for anything you need to keep.
 

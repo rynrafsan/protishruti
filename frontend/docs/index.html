@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:image" content="/brand/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0A3A2E">
+<link rel="icon" href="/brand/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/brand/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&family=IBM+Plex+Mono:wght@500;600&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/docs/assets/docs.css?v=0.2.0">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<!--BOOT-->
+<header class="topbar">
+  <button class="tb-btn contents" id="contentsBtn" aria-controls="rail" aria-expanded="false" title="Contents">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+    <span class="label">Contents</span>
+  </button>
+  <a class="brand" href="/docs" aria-label="Protishruti documentation, top">
+    <img src="/brand/icon.svg" alt="" width="30" height="30">
+    <b>প্রতিশ্রুতি</b><span>docs</span>
+  </a>
+  <div class="grow"></div>
+  <div class="search" role="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs" aria-controls="results" aria-expanded="false">
+    <kbd aria-hidden="true">/</kbd>
+    <div class="results" id="results" role="listbox" hidden></div>
+  </div>
+  <button class="tb-btn" id="presentBtn" title="Present the pitch as slides">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/></svg>
+    <span class="label">Present</span>
+  </button>
+  <div class="menu">
+    <button class="tb-btn" id="exportBtn" aria-haspopup="true" aria-expanded="false" title="Export or share">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+      <span class="label">Export</span>
+    </button>
+    <div class="menu-list" id="exportMenu" role="menu" hidden>
+      <button role="menuitem" data-act="pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M8 14h8v7H8z"/></svg>Print or save as PDF</button>
+      <a role="menuitem" href="/docs/export.md" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v14H4zM7 15V9l2.5 3L12 9v6M15 12l2 3 2-3M17 9v6"/></svg>Download Markdown</a>
+      <button role="menuitem" data-act="link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7L12 6.3M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>Copy share link</button>
+    </div>
+  </div>
+  <a class="tb-btn primary app" id="appLink" href="/">Open the app</a>
+</header>
+<div id="ribbon"></div>
+<div class="shell">
+  <nav class="rail" id="rail" aria-label="Contents"></nav>
+  <main id="main" tabindex="-1"><div class="col" id="doc"></div></main>
+</div>
+<noscript><p style="padding:20px">This page needs JavaScript. <a href="/docs/export.md">Read the Markdown version</a>.</p></noscript>
+<script src="/docs/assets/docs.js?v=0.2.0" defer></script>
+</body>
+</html>
