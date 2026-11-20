@@ -22,6 +22,7 @@ from .schema import CheckResult, Promise
 app = FastAPI(title="Protishruti", version="0.1.0")
 app.include_router(whatsapp.router)
 FRONTEND = Path(__file__).resolve().parent.parent / "frontend" / "index.html"
+BRAND = FRONTEND.parent / "brand"
 log = logging.getLogger("protishruti")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
@@ -58,6 +59,18 @@ def _read_safely(data: bytes, filename: str, mime: str | None, hint: str | None 
 @app.get("/", include_in_schema=False)
 def home():
     return FileResponse(FRONTEND)
+
+
+import mimetypes  # noqa: E402
+from fastapi.staticfiles import StaticFiles  # noqa: E402
+
+mimetypes.add_type("application/manifest+json", ".webmanifest")
+app.mount("/brand", StaticFiles(directory=BRAND), name="brand")  # logo, icons, social preview
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    return FileResponse(BRAND / "favicon-32.png", media_type="image/png")
 
 
 @app.get("/health")

@@ -1,3 +1,8 @@
+<p align="center">
+  <img src="frontend/brand/logo-light.svg#gh-light-mode-only" alt="প্রতিশ্রুতি Protishruti" height="72">
+  <img src="frontend/brand/logo-dark.svg#gh-dark-mode-only" alt="প্রতিশ্রুতি Protishruti" height="72">
+</p>
+
 # Protishruti (প্রতিশ্রুতি) — build, develop and deploy guide
 
 Protishruti checks what a broker promised a migrant worker against their visa, contract and payslips. It flags mismatches with fixed rules, explains them in plain Bangla, and saves a tamper-evident record.
@@ -25,6 +30,7 @@ app/            FastAPI app (schema, rules, extract, docreader, asr, explain, re
 data/           reference data: cost caps, FX, agency list (sample), watchlist
 data/knowledge/ RAG knowledge base: OEMA 2013, fee caps, complaints, helplines, agencies (each section cites a source URL)
 frontend/       single-page upload UI (served at /)
+frontend/brand/ logo (SVG), icons, favicon, social preview image, web manifest
 tools/synth/    synthetic case generator + renderer
 tools/          evaluate.py (rule recall), asr_eval.py (WER per dialect), rag_eval.py, rag_contexts.py
 tests/          pytest unit tests

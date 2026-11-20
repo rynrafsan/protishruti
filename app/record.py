@@ -94,7 +94,7 @@ def render_html(record_id: str) -> str:
 .sheet::after{{content:'PROTOTYPE · SYNTHETIC DATA';position:absolute;top:42%;left:-10%;right:-10%;text-align:center;transform:rotate(-18deg);
 font:700 64px/1 'Hind Siliguri',sans-serif;color:rgba(192,38,45,.07);pointer-events:none}}
 header{{background:var(--green);color:#fff;padding:22px 28px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:end}}
-header h1{{font:400 30px/1.2 'Tiro Bangla',serif;margin:0}}header p{{margin:2px 0 0;color:#cfe1d8;font-size:14px}}
+header .logo{{flex:none;align-self:center;border-radius:11px;box-shadow:0 0 0 1px rgba(200,164,86,.45)}}header h1{{font:400 30px/1.2 'Tiro Bangla',serif;margin:0}}header p{{margin:2px 0 0;color:#cfe1d8;font-size:14px}}
 .id{{font:500 13px/1.4 'IBM Plex Mono',monospace;color:var(--gold);text-align:right}}
 main{{padding:8px 28px 28px}}h2{{font:400 21px/1.3 'Tiro Bangla',serif;margin:26px 0 10px;color:var(--green)}}
 .note{{background:#fff;border:1px dashed var(--red);color:var(--red);padding:8px 12px;font-size:14px;margin-top:18px}}
@@ -111,7 +111,7 @@ ul{{padding-left:20px}}li code,.hash code{{display:block;font:500 12px/1.5 'IBM 
 @media print{{body{{background:#fff}}.sheet{{margin:0;border:0}}.actions{{display:none}}header{{-webkit-print-color-adjust:exact;print-color-adjust:exact}}}}
 @media (max-width:560px){{header,main{{padding-left:16px;padding-right:16px}}.flag{{grid-template-columns:1fr}}}}
 </style></head><body><div class="sheet">
-<header><div><h1>প্রতিশ্রুতি রেকর্ড</h1><p>Protishruti Record. Legal information, not legal advice.</p></div>
+<header><img class="logo" src="/brand/icon.svg" width="48" height="48" alt=""><div style="flex:1"><h1>প্রতিশ্রুতি রেকর্ড</h1><p>Protishruti Record. Legal information, not legal advice.</p></div>
 <div class="id">{e(record_id)}<br>{e(body['created_utc'])} UTC</div></header>
 <main><p class="note">প্রোটোটাইপ: শুধু নমুনা (SYNTHETIC) তথ্য। Prototype with synthetic data only.</p>
 {heard}<h2>অমিল ও সতর্কতা</h2>{flags}
