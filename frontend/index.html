@@ -167,7 +167,7 @@ textarea:focus { border-color: var(--green-600); outline: none; box-shadow: 0 0 
 .working span { font-size: 14px; color: var(--muted); }
 
 /* Side panel */
-aside.side { position: sticky; top: 20px; display: grid; gap: 16px; }
+aside.side { position: sticky; top: calc(var(--navh) + 16px); display: grid; gap: 16px; }
 .side .box { background: var(--green-900); color: #E3EEE8; padding: 20px; }
 .side .box h3 { font: 400 20px/1.3 var(--display); margin: 0 0 10px; color: #fff; }
 .side .box p { margin: 0; font-size: 15px; }
@@ -179,7 +179,7 @@ aside.side { position: sticky; top: 20px; display: grid; gap: 16px; }
 .status-list i.on { background: #5FD39E; box-shadow: 0 0 0 3px rgba(95,211,158,.18); }
 
 /* ---------- Results ---------- */
-#out { margin-top: 32px; scroll-margin-top: 16px; }
+#out { margin-top: 32px; scroll-margin-top: calc(var(--navh) + 12px); }
 .verdict { position: relative; padding: 28px 32px 26px; border-bottom: 1px solid var(--line); overflow: hidden; }
 .verdict h2 { font: 400 clamp(26px, 3.2vw, 36px)/1.25 var(--display); margin: 0; padding-right: 170px; }
 .verdict p { margin: 6px 0 0; color: var(--muted); padding-right: 170px; }
@@ -446,7 +446,7 @@ details.sources ul { margin: 8px 0 0; padding-left: 20px; }
 .annex { margin-top: 20px; border-top: 2px solid var(--green-900); padding-top: 12px; }
 .annex h4, .related h4 { font: 400 18px/1.3 var(--display); color: var(--green-900); margin: 0 0 6px; }
 .annex ol { list-style: none; margin: 0; padding: 0; }
-.annex li { display: grid; grid-template-columns: 30px 1fr; gap: 10px; padding: 12px 0; border-top: 1px dashed var(--line); scroll-margin-top: 90px; }
+.annex li { display: grid; grid-template-columns: 30px 1fr; gap: 10px; padding: 12px 0; border-top: 1px dashed var(--line); scroll-margin-top: calc(var(--navh) + 30px); }
 .annex li:first-child { border-top: 0; }
 .annex li.flash { background: #FBF5E4; transition: background .2s; }
 .annex .num { width: 26px; height: 26px; border-radius: 50%; background: var(--green-900); color: var(--gold-soft); display: grid; place-items: center; font: 400 14px/1 var(--display); }
@@ -548,6 +548,33 @@ footer .chain i.on { background: #2E9E6B; }
   .visa .stamp { top: auto; bottom: 44px; right: 12px; }
   .visa .stamp b { font-size: 30px; }
 }
+/* ---------- Section bar: always at the top, one link per part of the page ---------- */
+:root { --navh: 60px; }
+.secbar { position: sticky; top: 0; z-index: 60; background: var(--green-900); border-bottom: 1px solid rgba(200,164,86,.4); box-shadow: 0 6px 16px -14px rgba(0,0,0,.6); }
+.secbar .wrap { display: flex; align-items: center; gap: 18px; height: var(--navh); }
+.secbar .brand svg { width: 34px; height: 34px; }
+.secbar .brand b { font-size: 21px; }
+.secbar .brand small { font-size: 11.5px; }
+.secbar ul { display: flex; align-items: stretch; gap: 2px; list-style: none; margin: 0 0 0 auto; padding: 0; height: 100%; overflow-x: auto; scrollbar-width: none; }
+.secbar ul::-webkit-scrollbar { display: none; }
+.secbar li { display: flex; }
+.secbar a.sec { display: flex; align-items: center; padding: 3px 11px 0; color: #CFE0D8; text-decoration: none; font-weight: 500; font-size: 15px; white-space: nowrap; border-bottom: 3px solid transparent; }
+.secbar a.sec:hover { color: #fff; }
+.secbar a.sec[aria-current="true"] { color: #fff; border-bottom-color: var(--gold); }
+.secbar a.sec.is-primary { color: var(--gold-soft); font-weight: 600; }
+.secbar a:focus-visible { outline: 2px solid var(--gold); outline-offset: -4px; }
+main > section, #top, #fees, #slip { scroll-margin-top: calc(var(--navh) + 8px); }
+@media (max-width: 1180px) { .secbar a.sec { padding: 3px 8px 0; font-size: 14.5px; } .secbar .brand small { display: none; } }
+.secbar ul.more { -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); mask-image: linear-gradient(90deg, #000 85%, transparent); padding-right: 28px; }
+@media (max-width: 680px) {
+  :root { --navh: 50px; }
+  .secbar .wrap { gap: 10px; padding-right: 0; }
+  .secbar .brand span { display: none; }
+  .secbar .brand svg { width: 30px; height: 30px; }
+  .secbar ul { margin-left: 0; }
+  .secbar a.sec { font-size: 14.5px; padding: 3px 10px 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
@@ -555,23 +582,28 @@ footer .chain i.on { background: #2E9E6B; }
 </head>
 <body>
 
-<header class="hero">
+<nav class="secbar" aria-label="পাতার অংশগুলো">
   <div class="wrap">
-    <div class="topbar">
-      <a class="brand" href="#top" aria-label="প্রতিশ্রুতি, হোম">
+    <a class="brand" href="#top" aria-label="প্রতিশ্রুতি, হোম">
         <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#0A3A2E"/><circle cx="32" cy="32" r="24.5" fill="none" stroke="#C8A456" stroke-width="2.5" stroke-dasharray="4 3"/><path d="M20 33l8 8 16-18" fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span><b>প্রতিশ্রুতি</b><small>Protishruti</small></span>
       </a>
-      <nav aria-label="Sections">
-        <a href="#check">যাচাই করুন</a>
-        <a href="#why">কেন প্রতিশ্রুতি</a>
-        <a href="#rights">আপনার অধিকার</a>
-        <a href="#ask">প্রশ্ন করুন</a>
-        <a href="#wayout">বের হওয়ার পথ</a>
-        <a href="#whatsapp">WhatsApp</a>
-      </nav>
-    </div>
+    <ul>
+      <li><a class="sec" href="#why">কেন প্রতিশ্রুতি</a></li>
+      <li><a class="sec" href="#journey">কখন কাজে লাগে</a></li>
+      <li><a class="sec is-primary" href="#check">যাচাই করুন</a></li>
+      <li><a class="sec" href="#rights">আপনার অধিকার</a></li>
+      <li><a class="sec" href="#fees">খরচের হিসাব</a></li>
+      <li><a class="sec" href="#ask">প্রশ্ন করুন</a></li>
+      <li><a class="sec" href="#wayout">বের হওয়ার পথ</a></li>
+      <li><a class="sec" href="#whatsapp">WhatsApp</a></li>
+      <li><a class="sec" href="#safety">নিরাপত্তা</a></li>
+    </ul>
+  </div>
+</nav>
 
+<header class="hero">
+  <div class="wrap">
     <div class="hero-grid" id="top">
       <div>
         <h1>মুখের কথা<br>কাগজে মিলিয়ে নিন</h1>
@@ -1177,6 +1209,7 @@ f.addEventListener('submit', async (e) => {
     let data;
     try { data = JSON.parse(raw); } catch { throw new Error(`Server error ${res.status}: ${raw.slice(0, 200)} (see the terminal running uvicorn)`); }
     if (!res.ok) throw new Error(typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail));
+    $('working').classList.remove('show');  // hide it before render() scrolls, so the result doesn't jump up
     render(data);
   } catch (err) {
     say(err.name === 'AbortError' ? '৪ মিনিটেও উত্তর আসেনি। uvicorn চলা টার্মিনালে দেখুন কোন ধাপ আটকে আছে। No answer after 4 minutes.' : err.message, true);
@@ -1499,6 +1532,33 @@ function render(d) {
   $('out').scrollIntoView({ block: 'start' });
   $('out').focus({ preventScroll: true });
 }
+
+/* ---------- Section bar: mark the part on screen ---------- */
+(() => {
+  const bar = document.querySelector('.secbar'), list = bar.querySelector('ul');
+  const links = [...bar.querySelectorAll('a.sec')];
+  const targets = links.map(a => document.querySelector(a.getAttribute('href')));
+  let current = null, ticking = false;
+  function mark() {
+    ticking = false;
+    const line = bar.offsetHeight + 24;
+    let i = -1;
+    targets.forEach((t, j) => { if (t && t.getBoundingClientRect().top <= line) i = j; });
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) i = targets.length - 1;  // page end
+    const a = links[i] || null;
+    if (a === current) return;
+    if (current) current.removeAttribute('aria-current');
+    current = a;
+    if (!a) return;
+    a.setAttribute('aria-current', 'true');
+    const l = a.offsetLeft - list.offsetLeft, r = l + a.offsetWidth;
+    if (l < list.scrollLeft || r > list.scrollLeft + list.clientWidth) list.scrollTo({ left: l - 12, behavior: 'smooth' });
+  }
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(mark); } }, { passive: true });
+  const fit = () => { list.classList.remove('more'); list.classList.toggle('more', list.scrollWidth > list.clientWidth + 2); mark(); };
+  addEventListener('resize', fit);
+  fit();
+})();
 </script>
 </body>
 </html>
